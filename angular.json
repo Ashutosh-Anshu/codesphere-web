@@ -42,6 +42,12 @@
                   "maximumError": "8kB"
                 }
               ],
+              "fileReplacements": [
+                {
+                  "replace": "src/app/environments/environment.ts",
+                  "with": "src/app/environments/environment.product.ts"
+                }
+              ],
               "outputHashing": "all"
             },
             "development": {
