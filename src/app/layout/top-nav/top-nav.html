@@ -1,0 +1,95 @@
+<mat-toolbar class="!h-16 !px-4 md:!px-6 !bg-white !text-gray-800 border-b border-gray-200">
+  <!-- Mobile Menu -->
+  <button mat-icon-button class="mr-2 md:hidden" aria-label="Open menu" (click)="toggleSidebar.emit()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <!-- Logo / Brand -->
+  <div class="flex items-center gap-3">
+    <span class="hidden text-lg font-semibold sm:block">
+      Code Sphere
+    </span>
+  </div>
+
+  <!-- Spacer -->
+  <span class="flex-1"></span>
+
+
+  <!-- Notifications -->
+  <button mat-icon-button [matMenuTriggerFor]="notificationMenu" aria-label="Notifications" class="mr-1">
+    <mat-icon matBadge="3" matBadgeColor="warn" matBadgeSize="small">
+      notifications
+    </mat-icon>
+  </button>
+
+  <mat-menu #notificationMenu="matMenu" class="w-80">
+    <div class="px-4 py-3">
+      <h3 class="font-semibold text-gray-800">
+        Notifications
+      </h3>
+      <p class="text-sm text-gray-500">
+        You have 3 new notifications
+      </p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item>
+      <mat-icon>info</mat-icon>
+      <span>New update available</span>
+    </button>
+
+    <button mat-menu-item>
+      <mat-icon>message</mat-icon>
+      <span>New message received</span>
+    </button>
+
+    <button mat-menu-item>
+      <mat-icon>task_alt</mat-icon>
+      <span>Task completed</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item class="!text-indigo-600">
+      View all notifications
+    </button>
+  </mat-menu>
+
+  <!-- Mobile User -->
+  <button [matMenuTriggerFor]="userMenu" aria-label="User menu">
+    <div
+      class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700">
+      JD
+    </div>
+  </button>
+
+  <!-- User Dropdown -->
+  <mat-menu #userMenu="matMenu" class="w-56">
+    <div class="px-4 py-3">
+      <p class="font-semibold">John Doe</p>
+      <p class="text-sm text-gray-500">
+        john@example.com
+      </p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item>
+      <mat-icon>person</mat-icon>
+      <span>Profile</span>
+    </button>
+
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Settings</span>
+    </button>
+
+    <mat-divider></mat-divider>
+
+    <button mat-menu-item class="!text-red-600">
+      <mat-icon class="!text-red-600">logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
