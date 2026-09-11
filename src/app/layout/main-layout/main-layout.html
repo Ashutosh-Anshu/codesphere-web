@@ -1,7 +1,13 @@
+<div class="flex h-screen flex-col overflow-hidden">
 
+  <app-top-nav
+    [isDarkMode]="isDarkMode"
+    (toggleSidebar)="sidebar.toggle()"
+    (toggleTheme)="toggleTheme()"
+  ></app-top-nav>
 
-<!-- <router-outlet></router-outlet> -->
+  <app-side-nav #sidebar class="flex-1 overflow-hidden">
+    <router-outlet></router-outlet>
+  </app-side-nav>
 
-
-<app-top-nav (toggleSidebar)="sidebarOpened = !sidebarOpened"></app-top-nav>
-<app-side-nav></app-side-nav>
+</div>
