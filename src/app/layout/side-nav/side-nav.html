@@ -1,12 +1,12 @@
 <mat-sidenav-container class="h-full" style="background-color: var(--mat-sys-surface-container-low);">
 
-  <mat-sidenav
-    #sidenav
-    [mode]="isMobile ? 'over' : 'side'"
-    [opened]="!isMobile"
-    class="!w-64 !rounded-none !border-0 flex flex-col"
-    style="background-color: var(--mat-sys-surface-container-low);"
-  >
+<mat-sidenav
+  #sidenav
+  [mode]="isMobile ? 'over' : 'side'"
+  [opened]="!isMobile"
+  class="!w-64 !rounded-none !border-0 flex flex-col"
+  style="background-color: var(--mat-sys-surface-container);">
+
 
     <nav class="flex-1 overflow-y-auto scrollbar-hide p-3">
 
@@ -33,10 +33,8 @@
       <a routerLink="/messages" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
         <mat-icon class="mr-3">message</mat-icon>
         <span>Messages</span>
-        <span
-          class="ml-auto rounded-full px-2 py-0.5 text-xs"
-          style="background-color: var(--mat-sys-error); color: var(--mat-sys-on-error);"
-        >
+        <span class="ml-auto rounded-full px-2 py-0.5 text-xs"
+          style="background-color: var(--mat-sys-error); color: var(--mat-sys-on-error);">
           3
         </span>
       </a>
@@ -61,10 +59,8 @@
     <!-- USER -->
     <div class="shrink-0 p-3" style="border-top: 1px solid var(--mat-sys-outline-variant);">
       <div class="flex items-center rounded-lg p-3" style="background-color: var(--mat-sys-surface-container);">
-        <div
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-          style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);"
-        >
+        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+          style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);">
           JD
         </div>
         <div class="ml-3 min-w-0">
@@ -76,10 +72,8 @@
 
   </mat-sidenav>
 
-  <mat-sidenav-content
-    class="min-w-0 overflow-auto p-4 sm:p-6"
-    style="background-color: var(--mat-sys-surface-container-low); color: var(--mat-sys-on-surface);"
-  >
+  <mat-sidenav-content class="min-w-0 overflow-auto p-4 sm:p-6"
+    style="background-color: var(--mat-sys-surface-container-low); color: var(--mat-sys-on-surface);">
     <ng-content></ng-content>
   </mat-sidenav-content>
 

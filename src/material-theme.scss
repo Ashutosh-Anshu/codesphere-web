@@ -1,8 +1,6 @@
 @use '@angular/material' as mat;
-@import "tailwindcss";
 
 /* Tailwind v4: manual class-based dark mode enable karne ke liye */
-@custom-variant dark (&:where(.dark, .dark *));
 
 html {
   height: 100%;

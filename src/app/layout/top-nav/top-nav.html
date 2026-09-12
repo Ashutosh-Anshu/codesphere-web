@@ -1,14 +1,12 @@
-<mat-toolbar
-  class="!h-16 !px-3 sm:!px-4 md:!px-6"
-  style="background-color: var(--mat-sys-surface); color: var(--mat-sys-on-surface); border-bottom: 1px solid var(--mat-sys-outline-variant);"
->
+<mat-toolbar class="!h-16 !px-3 sm:!px-4 md:!px-6"
+  style="background-color: var(--mat-sys-surface); color: var(--mat-sys-on-surface); border-bottom: 1px solid var(--mat-sys-outline-variant);">
 
   <button mat-icon-button aria-label="Toggle sidebar" (click)="toggleSidebar.emit()" class="mr-2">
     <mat-icon>menu</mat-icon>
   </button>
 
   <div class="flex items-center">
-    <span class="text-lg font-semibold sm:text-xl">Code Sphere</span>
+    <span class="text-lg font-semibold sm:text-xl">CodeSphere</span>
   </div>
 
   <span class="flex-1"></span>
@@ -52,10 +50,8 @@
   </mat-menu>
 
   <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
-    <div
-      class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold"
-      style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);"
-    >
+    <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold"
+      style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);">
       JD
     </div>
   </button>
