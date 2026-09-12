@@ -13,8 +13,7 @@ import { RouterModule } from '@angular/router';
 })
 export class SideNav implements AfterViewInit {
 
-  @ViewChild('sidenav')
-  sidenav!: MatSidenav;
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile = false;
 
