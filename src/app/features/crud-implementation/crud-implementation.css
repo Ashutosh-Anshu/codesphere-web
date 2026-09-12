@@ -1,0 +1,30 @@
+::ng-deep .mat-mdc-paginator-outer-container .mat-mdc-paginator-container {
+    justify-content: space-between !important;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 2px;
+}
+
+.action-button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-button mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+
+.delete-button {
+    color: #dc2626;
+}
