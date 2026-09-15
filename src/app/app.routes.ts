@@ -8,7 +8,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'crud-implementation',
-                loadComponent: () => import('./features/crud-implementation/crud-implementation').then((m) => m.CrudImplementation),
+                loadComponent: () => import('./features/product-inventory/product-inventory').then((m) => m.ProductInventory),
             },
 
         ]
