@@ -22,7 +22,7 @@
             <div class="flex w-full items-start gap-3">
                 <mat-form-field appearance="outline" class="mb-4 flex-1">
                     <mat-label>Search products</mat-label>
-                    <input matInput placeholder="Search by name or description" #searchInput />
+                    <input matInput placeholder="Search by name or description" [(ngModel)]="searchText" />
                     <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
 
@@ -31,7 +31,6 @@
                     Search
                 </button>
             </div>
-
 
             <!-- ============ DESKTOP TABLE (sm and up) ============ -->
             <div class="hidden sm:block w-full overflow-x-auto table-scroll">
@@ -78,11 +77,6 @@
 
                             <div class="action-buttons">
 
-                                <button mat-icon-button class="action-button" aria-label="View product"
-                                    aria-label="View product">
-                                    <mat-icon aria-hidden="true">visibility</mat-icon>
-                                </button>
-
                                 <button mat-icon-button class="action-button" aria-label="Edit product"
                                     (click)="editProduct(element.productId)">
                                     <mat-icon aria-hidden="true">edit</mat-icon>
@@ -97,7 +91,6 @@
 
                         </td>
                     </ng-container>
-
 
                     <tr mat-header-row *matHeaderRowDef="productColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: productColumns;"></tr>
@@ -118,9 +111,15 @@
                             <mat-icon>more_vert</mat-icon>
                         </button>
                         <mat-menu #actionMenu="matMenu">
-                            <button mat-menu-item><mat-icon>visibility</mat-icon><span>View</span></button>
-                            <button mat-menu-item><mat-icon>edit</mat-icon><span>Edit</span></button>
-                            <button mat-menu-item><mat-icon>delete</mat-icon><span>Delete</span></button>
+
+                            <button mat-menu-item (click)="editProduct(element.productId)">
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item (click)="deleteProduct(element.productId)">
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
                         </mat-menu>
                     </div>
                     <div class="mt-3 flex items-center justify-between text-sm">

@@ -14,6 +14,9 @@ import { ViewMode } from '../../core/enums';
 import { ProductDetail } from './product-detail/product-detail';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteConfirmationDialog } from '../../common';
 
 @Component({
   selector: 'app-product-inventory',
@@ -27,7 +30,8 @@ import { finalize } from 'rxjs';
     MatPaginatorModule,
     MatMenuModule,
     CurrencyPipe,
-    DatePipe
+    DatePipe,
+    FormsModule
   ],
   templateUrl: './product-inventory.html',
   styleUrl: './product-inventory.css',
@@ -36,8 +40,10 @@ export class ProductInventory extends BaseListService implements OnInit {
 
   private readonly destroyRef = inject(DestroyRef);
   public readonly products = signal<Product[]>([]);
+  public searchText = '';
   private service = inject(ProductService);
   private dialogService = inject(DialogService);
+  private readonly dialog = inject(MatDialog);
   public productColumns: string[] = [
     'name',
     'description',
@@ -54,7 +60,7 @@ export class ProductInventory extends BaseListService implements OnInit {
   initData() {
     super.startLoading();
     this.service
-      .getAllAsync()
+      .getAllAsync(this.searchText || null)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.stopLoading())
@@ -96,23 +102,36 @@ export class ProductInventory extends BaseListService implements OnInit {
   }
 
   deleteProduct(id: string): void {
-    this.service.deleteProduct(id).subscribe({
-      next: (response) => {
-        if (response.success) {
-          console.log('Product deleted successfully');
-          this.initData();
-        } else {
-          console.error('Error deleting product:', response.message);
-        }
-      },
-      error: (error) => {
-        console.error('Error deleting product:', error);
+    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
+      width: '420px',
+      maxWidth: 'calc(100vw - 2rem)',
+      data: {
+        message: 'Are you sure you want to delete this product? This action cannot be undone.'
       }
-    })
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.service.deleteProduct(id).subscribe({
+          next: (response) => {
+            if (response.success) {
+              console.log('Product deleted successfully');
+              this.initData();
+            } else {
+              console.error('Error deleting product:', response.message);
+            }
+          },
+          error: (error) => {
+            console.error('Error deleting product:', error);
+          }
+        })
+      }
+    });
   }
 
   onSearch() {
-    debugger
+    const search = this.searchText?.trim().toLowerCase();
+    this.initData();
   }
 
 }

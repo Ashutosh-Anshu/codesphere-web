@@ -13,9 +13,11 @@ export class ProductService {
   private defaultUrl = environment.apiUrl + '/product';
   private http = inject(HttpClient);
 
-  getAllAsync(): Observable<ApiResponse<Product[]>> {
+  getAllAsync(search: string | null = null): Observable<ApiResponse<Product[]>> {
     const url = `${this.defaultUrl}/getAllAsync`;
-    return this.http.get<ApiResponse<Product[]>>(url);
+    return this.http.get<ApiResponse<Product[]>>(url, {
+      params: search ? { search } : {}
+    })
   }
 
   getProductById(id: string): Observable<ApiResponse<Product>> {
