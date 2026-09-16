@@ -76,7 +76,8 @@ export class ProductDetail extends BaseDetailService implements OnInit {
     if (this.productForm.valid) {
       const productData = this.productForm.value;
       const product = {
-        productId: productData.productId,
+        productId: this.isAddMode
+          ? '00000000-0000-0000-0000-000000000000' : productData.productId,
         name: productData.name?.trim(),
         description: productData.description?.trim(),
         price: productData.price,
