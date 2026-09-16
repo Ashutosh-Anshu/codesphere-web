@@ -1,18 +1,19 @@
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { BaseListService, DialogService, ProductService } from '../../core/services';
 import { Product } from '../../core/models';
 import { ViewMode } from '../../core/enums';
 import { ProductDetail } from './product-detail/product-detail';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-inventory',
@@ -33,10 +34,10 @@ import { ProductDetail } from './product-detail/product-detail';
 })
 export class ProductInventory extends BaseListService implements OnInit {
 
-  private readonly dialog = inject(MatDialog);
+  private readonly destroyRef = inject(DestroyRef);
+  public readonly products = signal<Product[]>([]);
   private service = inject(ProductService);
   private dialogService = inject(DialogService);
-  public products: Product[] = [];
   public productColumns: string[] = [
     'name',
     'description',
@@ -51,33 +52,40 @@ export class ProductInventory extends BaseListService implements OnInit {
   }
 
   initData() {
-    this.service.getAllAsync().subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.products = response.data as Product[];
-        } else {
-          console.error('Error fetching products:', response.message);
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching products:', error);
+    super.startLoading();
+    this.service
+      .getAllAsync()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.stopLoading())
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.products.set(response.data as Product[]);
+          } else {
+            console.error('Error fetching products:', response.message);
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+        },
+
+      });
+  }
+
+  showProductDetail(mode: ViewMode, productId?: string): void {
+    const dialogRef = this.dialogService.open(ProductDetail, {
+      mode,
+      productId
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.initData();
       }
     });
   }
-
-showProductDetail(mode: ViewMode, productId?: string): void {
-  const dialogRef = this.dialogService.open(ProductDetail, {
-    mode,
-    productId
-  });
-
-  dialogRef.afterClosed().subscribe(result => {
-    if (result === true) {
-      this.initData();
-    }
-  });
-}
-
 
   addProduct(): void {
     this.showProductDetail(ViewMode.Add);
@@ -101,6 +109,10 @@ showProductDetail(mode: ViewMode, productId?: string): void {
         console.error('Error deleting product:', error);
       }
     })
+  }
+
+  onSearch() {
+    debugger
   }
 
 }

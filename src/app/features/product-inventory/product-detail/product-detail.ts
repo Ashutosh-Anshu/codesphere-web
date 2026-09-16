@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ViewMode } from '../../../core/enums';
 import { BaseDetailService, ProductService } from '../../../core/services';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -32,7 +34,9 @@ export class ProductDetail extends BaseDetailService implements OnInit {
 
   private fb = inject(FormBuilder);
   private service = inject(ProductService);
-
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly dialogRef = inject(MatDialogRef<ProductDetail>);
+  
   productForm = this.fb.nonNullable.group({
     productId: [''],
     name: ['', Validators.required],
@@ -58,18 +62,25 @@ export class ProductDetail extends BaseDetailService implements OnInit {
   }
 
   private loadProduct(id: string): void {
-    this.service.getProductById(id).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.productForm.patchValue(response.data);
-        } else {
-          console.error('Error fetching product:', response.message);
+    super.startLoading();
+    this.service
+      .getProductById(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.stopLoading())
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success && response.data) {
+            this.productForm.patchValue(response.data);
+          } else {
+            console.error('Error fetching product:', response.message);
+          }
+        },
+        error: (error) => {
+          console.error('Error fetching product:', error);
         }
-      },
-      error: (error) => {
-        console.error('Error fetching product:', error);
-      }
-    });
+      });
   }
 
   onSubmit() {
@@ -83,16 +94,23 @@ export class ProductDetail extends BaseDetailService implements OnInit {
         price: productData.price,
         stock: productData.stock
       };
+      super.startLoading();
 
-      this.service.createOrUpdateAsync(product).subscribe({
-        next: (response) => {
-          console.log('Product created:', response);
-          this.productForm.reset();
-        },
-        error: (error) => {
-          console.error('Error creating product:', error);
-        }
-      });
+      this.service.createOrUpdateAsync(product)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          finalize(() => this.stopLoading())
+        )
+        .subscribe({
+          next: (response) => {
+            this.dialogRef.close(true);
+            this.productForm.reset();
+
+          },
+          error: (error) => {
+            console.error('Error creating product:', error);
+          }
+        });
     }
   }
 }

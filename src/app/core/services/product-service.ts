@@ -23,7 +23,7 @@ export class ProductService {
     return this.http.get<ApiResponse<Product>>(url);
   }
 
-  createOrUpdateAsync(product: any): Observable<ApiResponse<Product>> {debugger
+  createOrUpdateAsync(product: any): Observable<ApiResponse<Product>> {
     const url = `${this.defaultUrl}/createOrUpdateAsync`;
     return this.http.post<ApiResponse<Product>>(url, product);
   }
