@@ -102,34 +102,37 @@ export class ProductInventory extends BaseListService implements OnInit {
   }
 
   deleteProduct(id: string): void {
-    const dialogRef = this.dialog.open(DeleteConfirmationDialog, {
-      width: '420px',
-      maxWidth: 'calc(100vw - 2rem)',
-      data: {
-        message: 'Are you sure you want to delete this product? This action cannot be undone.'
-      }
-    });
+    const dialogRef = this.dialogService
+      .openDeleteConfirmation();
 
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
+    dialogRef
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
         this.service.deleteProduct(id).subscribe({
           next: (response) => {
+
             if (response.success) {
               this.initData();
             } else {
-              console.error('Error deleting product:', response.message);
+              console.error(
+                'Error deleting product:',
+                response.message
+              );
             }
           },
+
           error: (error) => {
             console.error('Error deleting product:', error);
           }
-        })
-      }
-    });
+        });
+
+      });
   }
 
   onSearch() {
-    const search = this.searchText?.trim().toLowerCase();
+    this.searchText?.trim().toLowerCase();
     this.initData();
   }
 

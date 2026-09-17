@@ -46,7 +46,7 @@ export class ProductDetail extends BaseDetailService implements OnInit {
     price: [0, Validators.required],
     stock: [0, Validators.required],
   });
-  
+
 
   ngOnInit() {
     this.initData();
@@ -130,4 +130,17 @@ export class ProductDetail extends BaseDetailService implements OnInit {
         });
     }
   }
+
+  // onCloseDailog() {
+  //   debugger
+  //   if (this.hasUnsavedChanges()) {
+  //     const dialogRef = this.dialog.open(UnsaveConfirmationDialog, {
+  //       width: '420px',
+  //       maxWidth: 'calc(100vw - 4rem)',
+  //       data: {
+  //         message: 'Are you sure you want to delete this product? This action cannot be undone.'
+  //       }
+  //     });
+  //   }
+  // }
 }

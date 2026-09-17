@@ -1,4 +1,5 @@
 import { Injectable, Type } from '@angular/core';
+import { DeleteConfirmationDialog } from '../../common';
 import {
   MatDialog,
   MatDialogConfig,
@@ -21,7 +22,7 @@ export interface AppDialogOptions {
 })
 export class DialogService {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private readonly dialog: MatDialog) { }
 
   open<T, D = unknown>(
     component: Type<T>,
@@ -49,8 +50,26 @@ export class DialogService {
     dialogRef: MatDialogRef<T>,
     result?: unknown
   ): Observable<unknown> {
-    
+
     dialogRef.close(result);
     return dialogRef.afterClosed();
+  }
+
+  openDeleteConfirmation(
+    message: string = 'Are you sure you want to delete this product? This action cannot be undone.'
+  ): MatDialogRef<DeleteConfirmationDialog, boolean> {
+
+    return this.open<DeleteConfirmationDialog,
+      { message: string | null }>(
+        DeleteConfirmationDialog,
+        {
+          message
+        },
+        {
+          width: '420px',
+          maxWidth: 'calc(100vw - 4rem)',
+          disableClose: true
+        }
+      );
   }
 }
