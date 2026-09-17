@@ -115,7 +115,6 @@ export class ProductInventory extends BaseListService implements OnInit {
         this.service.deleteProduct(id).subscribe({
           next: (response) => {
             if (response.success) {
-              console.log('Product deleted successfully');
               this.initData();
             } else {
               console.error('Error deleting product:', response.message);

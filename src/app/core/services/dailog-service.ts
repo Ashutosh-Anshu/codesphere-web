@@ -13,6 +13,7 @@ export interface AppDialogOptions {
   maxHeight?: string;
   panelClass?: string | string[];
   autoFocus?: boolean;
+  disableClose?: boolean;
 }
 
 @Injectable({
@@ -37,6 +38,7 @@ export class DialogService {
 
       autoFocus: options?.autoFocus ?? false,
       panelClass: options?.panelClass ?? 'app-dialog',
+      disableClose: options?.disableClose ?? true,
       data,
     };
 

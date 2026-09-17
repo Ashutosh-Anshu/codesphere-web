@@ -19,6 +19,7 @@
     "@angular/material": "^21.2.14",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "lodash": "^4.18.1",
     "ngx-spinner": "^22.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
@@ -28,6 +29,7 @@
     "@angular/cli": "^21.2.19",
     "@angular/compiler-cli": "^21.2.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/lodash": "^4.17.25",
     "jsdom": "^28.0.0",
     "postcss": "^8.5.3",
     "prettier": "^3.8.1",

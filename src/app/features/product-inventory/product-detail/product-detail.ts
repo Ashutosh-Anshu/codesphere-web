@@ -10,6 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
+import { Product } from '../../../core/models';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-product-detail',
@@ -36,7 +38,7 @@ export class ProductDetail extends BaseDetailService implements OnInit {
   private service = inject(ProductService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialogRef = inject(MatDialogRef<ProductDetail>);
-  
+  public rawProductForm!: Product;
   productForm = this.fb.nonNullable.group({
     productId: [''],
     name: ['', Validators.required],
@@ -44,24 +46,25 @@ export class ProductDetail extends BaseDetailService implements OnInit {
     price: [0, Validators.required],
     stock: [0, Validators.required],
   });
-
+  
 
   ngOnInit() {
     this.initData();
   }
 
-  initData() {
+  private initData() {
     if (this.dialogData.mode === ViewMode.Add) {
       this.isAddMode = true;
+      this.cloneDeep();
     } else if (this.dialogData.mode === ViewMode.Edit) {
-      this.loadProduct(this.dialogData.productId || '');
+      this.getProductById(this.dialogData.productId || '');
       this.isEditMode = true;
     } else {
       this.isViewMode = true;
     }
   }
 
-  private loadProduct(id: string): void {
+  private getProductById(id: string): void {
     super.startLoading();
     this.service
       .getProductById(id)
@@ -73,6 +76,7 @@ export class ProductDetail extends BaseDetailService implements OnInit {
         next: (response) => {
           if (response.success && response.data) {
             this.productForm.patchValue(response.data);
+            this.cloneDeep();
           } else {
             console.error('Error fetching product:', response.message);
           }
@@ -81,6 +85,19 @@ export class ProductDetail extends BaseDetailService implements OnInit {
           console.error('Error fetching product:', error);
         }
       });
+  }
+
+  private cloneDeep(): void {
+    this.rawProductForm = _.cloneDeep(
+      this.productForm.getRawValue()
+    ) as Product;
+  }
+
+  private hasUnsavedChanges(): boolean {
+    return !_.isEqual(
+      this.rawProductForm,
+      this.productForm.getRawValue()
+    );
   }
 
   onSubmit() {
