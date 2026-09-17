@@ -13,7 +13,7 @@ import { Product } from '../../core/models';
 import { ViewMode } from '../../core/enums';
 import { ProductDetail } from './product-detail/product-detail';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { filter, finalize, switchMap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteConfirmationDialog } from '../../common';
@@ -102,32 +102,23 @@ export class ProductInventory extends BaseListService implements OnInit {
   }
 
   deleteProduct(id: string): void {
-    const dialogRef = this.dialogService
-      .openDeleteConfirmation();
-
-    dialogRef
+    this.dialogService
+      .openDeleteConfirmation()
       .afterClosed()
-      .subscribe((confirmed) => {
-        if (!confirmed) return;
-
-        this.service.deleteProduct(id).subscribe({
-          next: (response) => {
-
-            if (response.success) {
-              this.initData();
-            } else {
-              console.error(
-                'Error deleting product:',
-                response.message
-              );
-            }
-          },
-
-          error: (error) => {
-            console.error('Error deleting product:', error);
+      .pipe(
+        filter((confirmed) => confirmed === true),
+        switchMap(() => this.service.deleteProduct(id)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.initData();
           }
-        });
-
+        },
+        error: (error) => {
+          console.error('Error deleting product:', error);
+        }
       });
   }
 

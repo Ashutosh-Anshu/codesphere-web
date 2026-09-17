@@ -56,7 +56,7 @@ export class DialogService {
   }
 
   openDeleteConfirmation(
-    message: string = 'Are you sure you want to delete this product? This action cannot be undone.'
+    message: string | null = null,
   ): MatDialogRef<DeleteConfirmationDialog, boolean> {
 
     return this.open<DeleteConfirmationDialog,
