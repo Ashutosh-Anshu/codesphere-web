@@ -1,12 +1,7 @@
 <mat-sidenav-container class="h-full" style="background-color: var(--mat-sys-surface-container-low);">
 
-<mat-sidenav
-  #sidenav
-  [mode]="isMobile ? 'over' : 'side'"
-  [opened]="!isMobile"
-  class="!w-64 !rounded-none !border-0 flex flex-col"
-  style="background-color: var(--mat-sys-surface-container);">
-
+  <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile"
+    class="!w-64 !rounded-none !border-0 flex flex-col" style="background-color: var(--mat-sys-surface-container);">
 
     <nav class="flex-1 overflow-y-auto scrollbar-hide p-3">
 

@@ -31,15 +31,11 @@ export class DialogService {
   ): MatDialogRef<T> {
 
     const config: MatDialogConfig<D> = {
-      width: options?.width ?? 'var(--app-dialog-width)',
-      height: options?.height ?? 'var(--app-dialog-height)',
-
-      maxWidth: options?.maxWidth ?? 'var(--app-dialog-max-width)',
-      maxHeight: options?.maxHeight ?? 'var(--app-dialog-max-height)',
-
       autoFocus: options?.autoFocus ?? false,
       panelClass: options?.panelClass ?? 'app-dialog',
       disableClose: options?.disableClose ?? true,
+      width: '400px',
+      maxWidth: options?.width ?? 'calc(100vw - 2rem)',
       data,
     };
 
@@ -66,8 +62,8 @@ export class DialogService {
           message
         },
         {
-          width: '420px',
-          maxWidth: 'calc(100vw - 4rem)',
+          width: '360px',
+          maxWidth: 'calc(100vw - 8rem)',
           disableClose: true
         }
       );
@@ -81,8 +77,8 @@ export class DialogService {
         message
       },
       {
-        width: '420px',
-        maxWidth: 'calc(100vw - 4rem)',
+        width: '360px',
+        maxWidth: 'calc(100vw - 8rem)',
         disableClose: true
       }
     );

@@ -25,52 +25,52 @@ html {
     --app-dialog-max-height: 90vh;
   }
 
-  /* Mobile: 0 - 639px */
-  @media (max-width: 639px) {
-    :root {
-      --app-dialog-width: calc(100vw - 24px);
-      --app-dialog-height: auto;
+  // /* Mobile: 0 - 639px */
+  // @media (max-width: 639px) {
+  //   :root {
+  //     --app-dialog-width: calc(100vw - 24px);
+  //     --app-dialog-height: auto;
 
-      --app-dialog-max-width: calc(100vw - 24px);
-      --app-dialog-max-height: calc(100vh - 24px);
-    }
-  }
+  //     --app-dialog-max-width: calc(100vw - 24px);
+  //     --app-dialog-max-height: calc(100vh - 24px);
+  //   }
+  // }
 
-  /* Small Tablet: 640 - 767px */
-  @media (min-width: 640px) and (max-width: 767px) {
-    :root {
-      --app-dialog-width: 90vw;
-      --app-dialog-max-width: 560px;
-      --app-dialog-max-height: 90vh;
-    }
-  }
+  // /* Small Tablet: 640 - 767px */
+  // @media (min-width: 640px) and (max-width: 767px) {
+  //   :root {
+  //     --app-dialog-width: 90vw;
+  //     --app-dialog-max-width: 560px;
+  //     --app-dialog-max-height: 90vh;
+  //   }
+  // }
 
-  /* Tablet: 768 - 1023px */
-  @media (min-width: 768px) and (max-width: 1023px) {
-    :root {
-      --app-dialog-width: 80vw;
-      --app-dialog-max-width: 600px;
-      --app-dialog-max-height: 90vh;
-    }
-  }
+  // /* Tablet: 768 - 1023px */
+  // @media (min-width: 768px) and (max-width: 1023px) {
+  //   :root {
+  //     --app-dialog-width: 80vw;
+  //     --app-dialog-max-width: 600px;
+  //     --app-dialog-max-height: 90vh;
+  //   }
+  // }
 
-  /* Laptop: 1024 - 1279px */
-  @media (min-width: 1024px) and (max-width: 1279px) {
-    :root {
-      --app-dialog-width: 650px;
-      --app-dialog-max-width: 70vw;
-      --app-dialog-max-height: 90vh;
-    }
-  }
+  // /* Laptop: 1024 - 1279px */
+  // @media (min-width: 1024px) and (max-width: 1279px) {
+  //   :root {
+  //     --app-dialog-width: 650px;
+  //     --app-dialog-max-width: 70vw;
+  //     --app-dialog-max-height: 90vh;
+  //   }
+  // }
 
-  /* Desktop: 1280px+ */
-  @media (min-width: 1280px) {
-    :root {
-      --app-dialog-width: 700px;
-      --app-dialog-max-width: 700px;
-      --app-dialog-max-height: 90vh;
-    }
-  }
+  // /* Desktop: 1280px+ */
+  // @media (min-width: 1280px) {
+  //   :root {
+  //     --app-dialog-width: 700px;
+  //     --app-dialog-max-width: 700px;
+  //     --app-dialog-max-height: 90vh;
+  //   }
+  // }
 
 
 
