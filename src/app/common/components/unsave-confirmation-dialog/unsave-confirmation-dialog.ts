@@ -7,6 +7,11 @@ export interface UnsaveConfirmationData {
   message?: string;
 }
 
+export type UnsaveConfirmationResult =
+  | 'cancel'
+  | 'discard'
+  | 'save';
+
 @Component({
   selector: 'app-unsave-confirmation-dialog',
   imports: [
@@ -20,13 +25,11 @@ export interface UnsaveConfirmationData {
 export class UnsaveConfirmationDialog {
 
   readonly defaultMessage =
-    'Are you sure you want to unsave this item?';
-
-  readonly defaultConfirmText = 'Delete';
-  readonly defaultCancelText = 'Cancel';
+    'You have unsaved changes. What would you like to do?';
 
   constructor(
-    private readonly dialogRef: MatDialogRef<UnsaveConfirmationData>,
+    private readonly dialogRef
+      : MatDialogRef<UnsaveConfirmationData, UnsaveConfirmationResult>,
     @Inject(MAT_DIALOG_DATA) public readonly data: UnsaveConfirmationData
   ) { }
 
@@ -35,10 +38,14 @@ export class UnsaveConfirmationDialog {
   }
 
   cancel(): void {
-    this.dialogRef.close(false);
+    this.dialogRef.close('cancel');
   }
 
-  confirm(): void {
-    this.dialogRef.close(true);
+  discard(): void {
+    this.dialogRef.close('discard');
+  }
+
+  save(): void {
+    this.dialogRef.close('save');
   }
 }

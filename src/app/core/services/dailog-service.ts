@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { DeleteConfirmationDialog } from '../../common';
+import { DeleteConfirmationDialog, UnsaveConfirmationData, UnsaveConfirmationDialog, UnsaveConfirmationResult } from '../../common';
 import {
   MatDialog,
   MatDialogConfig,
@@ -71,5 +71,20 @@ export class DialogService {
           disableClose: true
         }
       );
+  }
+
+  openUnsavedConfirmation(message?: string)
+    : MatDialogRef<UnsaveConfirmationDialog, UnsaveConfirmationResult> {
+    return this.open<UnsaveConfirmationDialog, UnsaveConfirmationData>(
+      UnsaveConfirmationDialog,
+      {
+        message
+      },
+      {
+        width: '420px',
+        maxWidth: 'calc(100vw - 4rem)',
+        disableClose: true
+      }
+    );
   }
 }

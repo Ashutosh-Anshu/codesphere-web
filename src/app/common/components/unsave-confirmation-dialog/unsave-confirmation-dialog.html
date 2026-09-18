@@ -18,11 +18,15 @@
 
     <div class="flex items-stretch justify-end gap-2 px-4 py-4 sm:px-5">
 
-        <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5" type="button" (click)="cancel()">
+        <button mat-stroked-button color="primary" class="!h-8 !rounded-sm !px-4" type="button" (click)="cancel()">
             Cancel
         </button>
 
-        <button mat-flat-button color="warn" class="!h-9 !rounded-sm !px-5" type="button" (click)="confirm()">
+        <button mat-stroked-button color="primary" class="!h-8 !rounded-sm !px-4" type="button" (click)="discard()">
+            Discard
+        </button>
+
+        <button mat-flat-button color="warn" class="!h-8 !rounded-sm !px-4" type="button" (click)="save()">
             Save
         </button>
 

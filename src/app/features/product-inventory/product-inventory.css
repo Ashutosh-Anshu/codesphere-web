@@ -28,3 +28,8 @@
 .delete-button {
     color: #dc2626;
 }
+
+.mat-mdc-paginator {
+    --mat-form-field-container-height: var(--mat-paginator-form-field-container-height, 35px);
+    --mat-form-field-container-vertical-padding: var(--mat-paginator-form-field-container-vertical-padding, 4px);
+}
