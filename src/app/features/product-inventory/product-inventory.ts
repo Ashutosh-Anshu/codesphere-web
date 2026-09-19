@@ -9,12 +9,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { filter, finalize, switchMap } from 'rxjs';
 import { BaseListService, DialogService, ProductService } from '../../core/services';
 import { Product } from '../../core/models';
 import { ViewMode } from '../../core/enums';
 import { ProductDetail } from './product-detail/product-detail';
+import { QueryParameters } from '../../common';
 
 @Component({
   selector: 'app-product-inventory',
@@ -53,6 +54,9 @@ export class ProductInventory extends BaseListService implements OnInit, AfterVi
   ];
 
   public searchText = '';
+  public totalProducts = 0;
+  public pageSize = 5;
+  public pageIndex = 0;
 
   ngOnInit(): void {
     this.loadProducts();
@@ -60,9 +64,7 @@ export class ProductInventory extends BaseListService implements OnInit, AfterVi
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
 
-    // Case-insensitive name sort + proper date sort
     this.dataSource.sortingDataAccessor = (item: Product, column: string) => {
       switch (column) {
         case 'name':
@@ -76,9 +78,20 @@ export class ProductInventory extends BaseListService implements OnInit, AfterVi
   }
 
   loadProducts(resetPage = false): void {
+    if (resetPage) {
+      this.pageIndex = 0;
+    }
+
+    const queryParameters: QueryParameters = {
+      pageNumber: this.pageIndex + 1,
+      pageSize: this.pageSize,
+      searchValue: this.searchText?.trim() || null
+    };
+
     super.startLoading();
+
     this.productService
-      .getAllAsync(this.searchText || null)
+      .getAllAsync(queryParameters)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.stopLoading())
@@ -86,21 +99,32 @@ export class ProductInventory extends BaseListService implements OnInit, AfterVi
       .subscribe({
         next: (response) => {
           if (response.success) {
-            this.dataSource.data = response.data as Product[];
-            if (resetPage) {
-              this.paginator?.firstPage();
-            }
+            this.dataSource.data = response.data.items;
+            this.totalProducts = response.data.totalCount;
           } else {
+            this.dataSource.data = [];
+            this.totalProducts = 0;
             console.error('Error fetching products:', response.message);
           }
         },
-        error: (error) => console.error('Error fetching products:', error),
+        error: (error) => {
+          this.dataSource.data = [];
+          this.totalProducts = 0;
+          console.error('Error fetching products:', error);
+        },
       });
   }
 
   onSearch(): void {
     this.searchText = this.searchText.trim();
-    this.loadProducts(true);
+    this.pageIndex = 0;
+    this.loadProducts();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadProducts();
   }
 
   onAddProduct(): void {

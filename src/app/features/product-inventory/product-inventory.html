@@ -147,7 +147,8 @@
             </div>
 
             <!-- Paginator -->
-            <mat-paginator class="paginator-left" [pageSizeOptions]="[5, 10, 20]" [pageSize]="5" showFirstLastButtons
+            <mat-paginator class="paginator-left" [length]="totalProducts" [pageIndex]="pageIndex" [pageSize]="pageSize"
+                [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons (page)="onPageChange($event)"
                 aria-label="Select page of products">
             </mat-paginator>
 

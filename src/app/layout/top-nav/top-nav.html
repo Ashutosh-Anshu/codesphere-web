@@ -15,9 +15,9 @@
     <mat-icon aria-hidden="true">{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
   </button>
 
-  <button mat-icon-button [matMenuTriggerFor]="notificationMenu" aria-label="Notifications" class="mr-1">
+  <!-- <button mat-icon-button [matMenuTriggerFor]="notificationMenu" aria-label="Notifications" class="mr-1">
     <mat-icon [matBadge]="3" matBadgeColor="warn" matBadgeSize="small" aria-hidden="true">notifications</mat-icon>
-  </button>
+  </button> -->
 
   <mat-menu #notificationMenu="matMenu">
     <div class="w-72 px-4 py-3 sm:w-80">
@@ -49,12 +49,12 @@
     </button>
   </mat-menu>
 
-  <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
+  <!-- <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu">
     <div class="flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold"
       style="background-color: var(--mat-sys-primary-container); color: var(--mat-sys-on-primary-container);">
       JD
     </div>
-  </button>
+  </button> -->
 
   <mat-menu #userMenu="matMenu">
     <div class="w-56 px-4 py-3">
@@ -65,7 +65,7 @@
     <mat-divider></mat-divider>
 
     <button mat-menu-item>
-      <mat-icon >person</mat-icon>
+      <mat-icon>person</mat-icon>
       <span>Profile</span>
     </button>
 
