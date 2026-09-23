@@ -7,9 +7,13 @@ export const routes: Routes = [
         component: MainLayout,
         children: [
             {
-                path: 'crud-implementation',
+                path: 'crudOperations',
                 loadComponent: () => import('./features/product-inventory/product-inventory').then((m) => m.ProductInventory),
             },
+            {
+                path:'identityAccess',
+                loadComponent: () => import('./features/identity-access/identity-access').then((m) => m.IdentityAccess)
+            }
 
         ]
     }
