@@ -1,0 +1,174 @@
+<div class="flex w-full max-w-[calc(100vw-1.5rem)] flex-col
+           overflow-hidden
+           bg-[var(--mat-sys-surface)]
+           text-[var(--mat-sys-on-surface)]
+           sm:max-w-xl">
+
+    <div class="flex shrink-0 items-center justify-between gap-3
+               border-b border-[var(--mat-sys-outline-variant)]
+               bg-[var(--mat-sys-surface-container-low)]
+               px-3 py-2.5
+               sm:px-4 sm:py-3">
+
+        <div class="min-w-0">
+
+            <h2 class="truncate text-sm font-semibold sm:text-base">
+                Add User
+            </h2>
+
+            <p class="mt-0.5 truncate text-[11px] opacity-60 sm:text-xs">
+                Create a new user and assign roles and access permissions.
+            </p>
+
+        </div>
+
+        <button mat-icon-button type="button" aria-label="Close" (click)="close()" class="shrink-0">
+
+            <mat-icon>
+                close
+            </mat-icon>
+
+        </button>
+
+    </div>
+
+
+    <form class="min-h-0 overflow-y-auto
+               px-3 py-3
+               sm:px-4 sm:py-4">
+
+        <div class="grid grid-cols-1
+                   gap-x-3 gap-y-1
+                   sm:grid-cols-2 sm:gap-x-4">
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    First Name
+                </mat-label>
+
+                <input matInput type="text" placeholder="Enter first name" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    Last Name
+                </mat-label>
+
+                <input matInput type="text" placeholder="Enter last name" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full sm:col-span-2">
+
+                <mat-label>
+                    Email Address
+                </mat-label>
+
+                <input matInput type="email" placeholder="Enter email address" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full sm:col-span-2">
+
+                <mat-label>
+                    Username
+                </mat-label>
+
+                <input matInput type="text" placeholder="Enter username" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    Password
+                </mat-label>
+
+                <input matInput type="password" placeholder="Enter password" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    Confirm Password
+                </mat-label>
+
+                <input matInput type="password" placeholder="Confirm password" />
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    Role
+                </mat-label>
+
+                <mat-select>
+
+                    <mat-option value="">
+                        Select role
+                    </mat-option>
+
+                    @for (role of roles; track role.id) {
+
+                    <mat-option [value]="role.id">
+                        {{ role.name }}
+                    </mat-option>
+
+                    }
+
+                </mat-select>
+
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline" class="w-full">
+
+                <mat-label>
+                    Status
+                </mat-label>
+
+                <mat-select>
+
+                    <mat-option value="ACTIVE">
+                        Active
+                    </mat-option>
+
+                    <mat-option value="INACTIVE">
+                        Inactive
+                    </mat-option>
+
+                </mat-select>
+
+            </mat-form-field>
+
+        </div>
+
+    </form>
+
+    <div class="flex shrink-0 items-center justify-end gap-1.5
+               border-t
+               border-[var(--mat-sys-outline-variant)]
+               bg-[var(--mat-sys-surface-container-low)]
+               px-3 py-2
+               sm:px-4 sm:py-2.5">
+        <div class="flex items-center justify-end gap-2 py-2">
+            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="button">
+                Cancel
+            </button>
+            <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+</div>

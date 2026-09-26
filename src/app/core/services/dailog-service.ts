@@ -34,8 +34,9 @@ export class DialogService {
       autoFocus: options?.autoFocus ?? false,
       panelClass: options?.panelClass ?? 'app-dialog',
       disableClose: options?.disableClose ?? true,
-      width: '400px',
-      maxWidth: options?.width ?? 'calc(100vw - 2rem)',
+      width: options?.width ?? '400px',
+      maxWidth: options?.maxWidth ?? 'calc(100vw - 24px)',
+      maxHeight: options?.maxHeight ?? 'calc(100vh - 24px)',
       data,
     };
 

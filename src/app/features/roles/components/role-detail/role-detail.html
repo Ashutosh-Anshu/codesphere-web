@@ -1,0 +1,296 @@
+<div class="flex h-full min-h-0 flex-col
+           bg-[var(--mat-sys-surface)]
+           text-[var(--mat-sys-on-surface)]">
+
+    <div class="flex shrink-0 items-center justify-between
+               border-b border-[var(--mat-sys-outline-variant)]
+               bg-[var(--mat-sys-surface-container-low)]
+               px-3 py-3
+               sm:px-4 sm:py-3">
+
+        <div class="flex flex-col min-w-0 items-start gap-1">
+            <h2 class="truncate text-sm font-semibold sm:text-base">
+                {{ pageTitle }}
+            </h2>
+
+            <p class="truncate text-[12px] opacity-60 sm:text-xs">
+                {{ pageDescription }}
+            </p>
+        </div>
+
+        <button mat-icon-button type="button" aria-label="Close" (click)="onCancel()" class="shrink-0">
+
+            <mat-icon>
+                close
+            </mat-icon>
+
+        </button>
+    </div>
+
+    <div class="min-h-0 flex-1 overflow-y-auto
+               px-3 py-3
+               sm:px-4 sm:py-4">
+
+        <section>
+
+            <div class="mb-3 border-b
+                       border-[var(--mat-sys-outline-variant)]
+                       pb-2.5">
+
+                <h3 class="text-sm font-semibold">
+                    Role Information
+                </h3>
+
+                <p class="mt-0.5 text-[11px] leading-4 opacity-60 sm:text-xs">
+                    Enter the basic information for this role.
+                </p>
+
+            </div>
+
+            <div class="grid grid-cols-1
+                       gap-x-3 gap-y-3
+                       sm:grid-cols-2 sm:gap-x-4">
+
+                <mat-form-field appearance="outline" class="w-full">
+
+                    <mat-label>
+                        Role Name
+                    </mat-label>
+
+                    <input matInput type="text" maxlength="100" placeholder="Administrator" [(ngModel)]="role.name" />
+
+                </mat-form-field>
+
+
+                <mat-form-field appearance="outline" class="w-full">
+
+                    <mat-label>
+                        Status
+                    </mat-label>
+
+                    <mat-select [(ngModel)]="role.status">
+
+                        <mat-option value="ACTIVE">
+
+                            <div class="flex items-center gap-2 text-sm">
+
+                                <span class="h-2 w-2 rounded-full bg-green-500">
+                                </span>
+
+                                Active
+
+                            </div>
+
+                        </mat-option>
+
+                        <mat-option value="INACTIVE">
+
+                            <div class="flex items-center gap-2 text-sm">
+
+                                <span class="h-2 w-2 rounded-full bg-gray-400">
+                                </span>
+
+                                Inactive
+
+                            </div>
+
+                        </mat-option>
+
+                    </mat-select>
+
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="w-full sm:col-span-2">
+
+                    <mat-label>
+                        Description
+                    </mat-label>
+
+                    <textarea matInput rows="2" maxlength="500" placeholder="Full system administrator"
+                        [(ngModel)]="role.description">
+                    </textarea>
+
+                    <mat-hint align="end">
+                        {{ role.description.length }}/500
+                    </mat-hint>
+
+                </mat-form-field>
+
+            </div>
+
+        </section>
+
+
+        <section class="mt-2 sm:mt-3">
+
+            <div class="mb-2.5 border-b
+                       border-[var(--mat-sys-outline-variant)]
+                       pb-2.5">
+
+                <h3 class="text-sm font-semibold">
+                    Permissions
+                </h3>
+
+                <p class="mt-0.5 text-[11px] leading-4 opacity-60 sm:text-xs">
+                    Select the actions allowed for each menu.
+                </p>
+
+            </div>
+
+
+            <div class="space-y-1.5">
+
+                @for (menu of menus; track menu.code) {
+
+                <div class="rounded-lg border
+                           border-[var(--mat-sys-outline-variant)]
+                           bg-[var(--mat-sys-surface)]
+                           px-2.5 py-2
+                           transition-colors
+                           hover:bg-[var(--mat-sys-surface-container)]
+                           sm:px-3 sm:py-2.5">
+
+                    <div class="flex items-center justify-between gap-2">
+
+                        <div class="flex min-w-0 items-center gap-1.5">
+
+                            <mat-checkbox [checked]="menu.enabled" (change)="toggleMenuPermissions(menu)"
+                                color="primary" class="shrink-0">
+                            </mat-checkbox>
+
+                            <div class="min-w-0">
+
+                                <div class="truncate text-xs font-semibold sm:text-sm">
+
+                                    {{ menu.name }}
+
+                                </div>
+
+                                <div class="truncate text-[10px] leading-3.5 opacity-50 sm:text-[11px]">
+
+                                    {{ menu.description }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        @if (hasAnyPermission(menu)) {
+
+                        <span class="shrink-0 rounded-full
+                                   bg-[var(--mat-sys-primary-container)]
+                                   px-1.5 py-0.5
+                                   text-[9px] font-medium
+                                   text-[var(--mat-sys-on-primary-container)]">
+
+                            Configured
+
+                        </span>
+
+                        }
+
+                    </div>
+
+
+                    <div class="mt-1.5 grid grid-cols-2
+                               gap-x-1 gap-y-0
+                               border-t
+                               border-[var(--mat-sys-outline-variant)]
+                               pt-1
+                               sm:grid-cols-4">
+
+                        <label class="flex min-w-0 cursor-pointer
+                                   items-center gap-0.5
+                                   rounded-md px-0.5 py-0
+                                   hover:bg-[var(--mat-sys-surface-container)]">
+
+                            <mat-checkbox [(ngModel)]="menu.permissions.add" [disabled]="!menu.enabled" color="primary"
+                                class="compact-checkbox">
+                            </mat-checkbox>
+
+                            <span class="truncate text-[11px] font-medium sm:text-xs">
+                                Add
+                            </span>
+
+                        </label>
+
+
+                        <label class="flex min-w-0 cursor-pointer
+                                   items-center gap-0.5
+                                   rounded-md px-0.5 py-0
+                                   hover:bg-[var(--mat-sys-surface-container)]">
+
+                            <mat-checkbox [(ngModel)]="menu.permissions.edit" [disabled]="!menu.enabled" color="primary"
+                                class="compact-checkbox">
+                            </mat-checkbox>
+
+                            <span class="truncate text-[11px] font-medium sm:text-xs">
+                                Edit
+                            </span>
+
+                        </label>
+
+
+                        <label class="flex min-w-0 cursor-pointer
+                                   items-center gap-0.5
+                                   rounded-md px-0.5 py-0
+                                   hover:bg-[var(--mat-sys-surface-container)]">
+
+                            <mat-checkbox [(ngModel)]="menu.permissions.delete" [disabled]="!menu.enabled"
+                                color="primary" class="compact-checkbox">
+                            </mat-checkbox>
+
+                            <span class="truncate text-[11px] font-medium sm:text-xs">
+                                Delete
+                            </span>
+
+                        </label>
+
+
+                        <label class="flex min-w-0 cursor-pointer
+                                   items-center gap-0.5
+                                   rounded-md px-0.5 py-0
+                                   hover:bg-[var(--mat-sys-surface-container)]">
+
+                            <mat-checkbox [(ngModel)]="menu.permissions.view" [disabled]="!menu.enabled" color="primary"
+                                class="compact-checkbox">
+                            </mat-checkbox>
+
+                            <span class="truncate text-[11px] font-medium sm:text-xs">
+                                View
+                            </span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <div class="flex shrink-0 items-center justify-end gap-1.5
+               border-t
+               border-[var(--mat-sys-outline-variant)]
+               bg-[var(--mat-sys-surface-container-low)]
+               px-3 py-2
+               sm:px-4 sm:py-2.5">
+        <div class="flex items-center justify-end gap-2 py-2">
+            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="button">
+                Cancel
+            </button>
+            <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+
+</div>

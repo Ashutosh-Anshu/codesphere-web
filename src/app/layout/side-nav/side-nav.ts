@@ -16,6 +16,7 @@ export class SideNav implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   isMobile = false;
+  identityAccessExpanded = false;
 
   constructor(private breakpointObserver: BreakpointObserver) { }
 

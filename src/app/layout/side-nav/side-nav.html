@@ -10,10 +10,55 @@
         <span class="font-medium">CRUD Operations</span>
       </a>
 
-      <a routerLink="/identityAccess" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
+      <!-- <a routerLink="/identityAccess" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
         <mat-icon class="mr-3" aria-hidden="true">people</mat-icon>
         <span class="font-medium">Identity & Access </span>
-      </a>
+      </a> -->
+
+      <div class="mt-1">
+
+        <button type="button" class="flex items-center w-full px-3 py-2.5 rounded-lg text-sm font-medium 
+           hover:opacity-90" (click)="identityAccessExpanded = !identityAccessExpanded">
+
+          <mat-icon class="mr-3" aria-hidden="true">admin_panel_settings</mat-icon>
+          <span class="font-medium">Identity & Access</span>
+
+          <mat-icon class="ml-auto transition-transform duration-200" [class.rotate-180]="identityAccessExpanded">
+            expand_more
+          </mat-icon>
+
+        </button>
+
+        @if (identityAccessExpanded) {
+
+        <div class="ml-5 mt-1 pl-3 border-l flex flex-col gap-0.5 pb-2"
+          style="border-color: var(--mat-sys-outline-variant);">
+
+          <a routerLink="/users" routerLinkActive="active-link" class="nav-link"
+            (click)="closeOnMobile()">
+            <mat-icon class="mr-3" aria-hidden="true">people</mat-icon>
+            <span class="font-medium">Users</span>
+          </a>
+
+          <a routerLink="/roles" routerLinkActive="active-link" class="nav-link"
+            (click)="closeOnMobile()">
+            <mat-icon class="mr-3" aria-hidden="true">shield</mat-icon>
+            <span class="font-medium">Role</span>
+          </a>
+
+          <a routerLink="/login" routerLinkActive="active-link" class="nav-link"
+            (click)="closeOnMobile()">
+            <mat-icon class="mr-3" aria-hidden="true">login</mat-icon>
+            <span class="font-medium">Login</span>
+          </a>
+
+
+        </div>
+
+        }
+
+      </div>
+
 
       <a routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
         <mat-icon class="mr-3" aria-hidden="true">security</mat-icon>

@@ -17,6 +17,10 @@ html {
     padding: 0px !important;
   }
 
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 12px !important;
+  }
+
   :root {
     --app-dialog-width: 90vw;
     --app-dialog-height: auto;

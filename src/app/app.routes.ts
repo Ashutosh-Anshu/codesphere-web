@@ -8,13 +8,24 @@ export const routes: Routes = [
         children: [
             {
                 path: 'crudOperations',
-                loadComponent: () => import('./features/product-inventory/product-inventory').then((m) => m.ProductInventory),
+                loadComponent: () => import('./features/product-inventory/product-inventory')
+                    .then((m) => m.ProductInventory),
             },
-            {
-                path:'identityAccess',
-                loadComponent: () => import('./features/identity-access/identity-access').then((m) => m.IdentityAccess)
-            }
 
+            {
+                path: 'login',
+                loadComponent: () => import('./features/login/login').then(x => x.Login)
+            },
+
+            {
+                path: 'users',
+                loadComponent: () => import('./features/users/user-list').then(x => x.UserList)
+            },
+
+            {
+                path: 'roles',
+                loadComponent: () => import('./features/roles/role-list').then(x => x.RoleList)
+            }
         ]
     }
 ];
