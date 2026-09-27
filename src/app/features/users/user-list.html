@@ -46,47 +46,78 @@
 
         <div class="mb-5 w-full">
             <div class="flex w-full flex-col gap-2 sm:flex-row sm:items-start">
+
+                <!-- Search -->
                 <mat-form-field appearance="outline" class="mb-0 flex-1">
                     <mat-label>Search users</mat-label>
 
                     <input matInput placeholder="Search by name or email" [(ngModel)]="searchText"
                         (keyup.enter)="onSearch()" />
 
-                    <mat-icon matSuffix> search </mat-icon>
+                    <mat-icon matSuffix>search</mat-icon>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" class="w-full sm:w-[180px]">
-                    <mat-label>Role</mat-label>
 
-                    <mat-select [(ngModel)]="selectedRole" (selectionChange)="onSearch()">
-                        <mat-option value=""> All Roles </mat-option>
+                <!-- Roles -->
+                <!-- <mat-form-field appearance="outline" class="w-full sm:w-[220px]">
+                    <mat-label>Roles</mat-label>
 
-                        @for (role of roles; track role.id) {
-                        <mat-option [value]="role.id"> {{ role.name }} </mat-option>
+                    <mat-select [(ngModel)]="selectedRoles" multiple>
+                        <mat-select-trigger>
+                            @if (selectedRoles.length === 0) {
+                            All Roles
+                            } @else {
+                            {{ getSelectedRoleNames()[0] }}
+
+                            @if (selectedRoles.length > 1) {
+                            <span class="text-gray-500">
+                                (+{{ selectedRoles.length - 1 }}
+                                {{ selectedRoles.length === 2 ? 'other' : 'others' }})
+                            </span>
+                            }
+                            }
+                        </mat-select-trigger>
+
+                        @for (role of roles(); track role.id) {
+                        <mat-option [value]="role.id">
+                            {{ role.name }}
+                        </mat-option>
                         }
                     </mat-select>
-                </mat-form-field>
+                </mat-form-field> -->
 
-                <mat-form-field appearance="outline" class="w-full sm:w-[160px]">
+
+                <!-- Status -->
+                <!-- <mat-form-field appearance="outline" class="w-full sm:w-[160px]">
                     <mat-label>Status</mat-label>
 
-                    <mat-select [(ngModel)]="selectedStatus" (selectionChange)="onSearch()">
-                        <mat-option value=""> All Status </mat-option>
+                    <mat-select [(ngModel)]="selectedStatus">
+                        <mat-option value="">All Status</mat-option>
 
-                        <mat-option value="ACTIVE"> Active </mat-option>
+                        <mat-option value="ACTIVE">
+                            Active
+                        </mat-option>
 
-                        <mat-option value="INACTIVE"> Inactive </mat-option>
+                        <mat-option value="INACTIVE">
+                            Inactive
+                        </mat-option>
 
-                        <mat-option value="SUSPENDED"> Suspended </mat-option>
+                        <mat-option value="SUSPENDED">
+                            Suspended
+                        </mat-option>
                     </mat-select>
-                </mat-form-field>
+                </mat-form-field> -->
 
+
+                <!-- Search Button -->
                 <button mat-stroked-button color="primary" type="button"
                     class="!h-[43px] sm:!w-[110px] !rounded-sm !px-5" (click)="onSearch()">
                     <mat-icon>search</mat-icon>
                     Search
                 </button>
+
             </div>
+
 
             <div class="hidden sm:block w-full overflow-x-auto table-scroll">
                 <table mat-table [dataSource]="dataSource" matSort class="w-full mat-elevation-z2">
@@ -97,7 +128,7 @@
                             <div class="flex items-center gap-3">
                                 <div
                                     class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--mat-sys-primary-container)] text-sm font-semibold text-[var(--mat-sys-on-primary-container)]">
-                                    {{ getInitials(element) }}
+                                    {{ element.fullName | avatarInitials}}
                                 </div>
 
                                 <div class="min-w-0">
@@ -147,7 +178,7 @@
                                         'bg-red-500': element.status === 'SUSPENDED'
                                     }"></span>
 
-                                <span> {{ getStatusLabel(element.status) }} </span>
+                                <span> {{ element.status ? 'Active' : 'Inactive' }} </span>
                             </span>
                         </td>
                     </ng-container>
@@ -172,7 +203,7 @@
                                     <mat-icon> edit </mat-icon>
                                 </button>
 
-                                <button mat-icon-button class="action-button" aria-label="Manage roles"
+                                <!-- <button mat-icon-button class="action-button" aria-label="Manage roles"
                                     matTooltip="Manage roles" (click)="onManageRoles(element.userId)">
                                     <mat-icon> admin_panel_settings </mat-icon>
                                 </button>
@@ -180,9 +211,9 @@
                                 <button mat-icon-button class="action-button" aria-label="Manage permissions"
                                     matTooltip="Manage permissions" (click)="onManagePermissions(element.userId)">
                                     <mat-icon> lock </mat-icon>
-                                </button>
+                                </button> -->
 
-                                <button mat-icon-button [matMenuTriggerFor]="actionMenu" aria-label="User actions">
+                                <!-- <button mat-icon-button [matMenuTriggerFor]="actionMenu" aria-label="User actions">
                                     <mat-icon> more_vert </mat-icon>
                                 </button>
 
@@ -232,7 +263,7 @@
 
                                         <span> Delete User </span>
                                     </button>
-                                </mat-menu>
+                                </mat-menu> -->
                             </div>
                         </td>
                     </ng-container>
@@ -281,7 +312,7 @@
                         <div class="flex min-w-0 items-center gap-3">
                             <div
                                 class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--mat-sys-primary-container)] text-sm font-semibold text-[var(--mat-sys-on-primary-container)]">
-                                {{ getInitials(element) }}
+                                {{ element.fullName | avatarInitials }}
                             </div>
 
                             <div class="min-w-0">
@@ -307,35 +338,35 @@
                                 <span> Edit </span>
                             </button>
 
-                            <button mat-menu-item (click)="onManageRoles(element.userId)">
+                            <!-- <button mat-menu-item (click)="onManageRoles(element.userId)">
                                 <mat-icon> admin_panel_settings </mat-icon>
 
                                 <span> Manage Roles </span>
-                            </button>
+                            </button> -->
 
-                            <button mat-menu-item (click)="onManagePermissions(element.userId)">
+                            <!-- <button mat-menu-item (click)="onManagePermissions(element.userId)">
                                 <mat-icon> lock </mat-icon>
 
                                 <span> Permissions </span>
-                            </button>
+                            </button> -->
 
                             <mat-divider></mat-divider>
 
                             @if (element.status === 'ACTIVE') {
 
-                            <button mat-menu-item (click)="onDeactivateUser(element.userId)">
+                            <!-- <button mat-menu-item (click)="onDeactivateUser(element.userId)">
                                 <mat-icon> block </mat-icon>
 
                                 <span> Deactivate </span>
-                            </button>
+                            </button> -->
 
                             } @else {
 
-                            <button mat-menu-item (click)="onActivateUser(element.userId)">
+                            <!-- <button mat-menu-item (click)="onActivateUser(element.userId)">
                                 <mat-icon> check_circle </mat-icon>
 
                                 <span> Activate </span>
-                            </button>
+                            </button> -->
 
                             }
 
@@ -364,7 +395,7 @@
                                             'bg-red-500': element.status === 'SUSPENDED'
                                         }"></span>
 
-                                <span> {{ getStatusLabel(element.status) }} </span>
+                                <span> {{ element.status ? 'Active' : 'Inactive' }} </span>
                             </div>
                         </div>
                     </div>
