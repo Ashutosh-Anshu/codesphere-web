@@ -3,17 +3,17 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, PaginatedResponse, QueryParameters } from '../../common/services/ApiResponse';
-import { Product, User } from '../models';
+import { Product, Role, RoleMenu, RolePermission, User } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
 
-  private defaultUrl = environment.apiUrl + '/user';
+  private defaultUrl = environment.apiUrl + '/account';
   private http = inject(HttpClient);
 
-  getAllAsync(queryParameters: QueryParameters, roleIds: string[])
+  getAllAsync(queryParameters: QueryParameters)
     : Observable<ApiResponse<PaginatedResponse<User>>> {
     const url = `${this.defaultUrl}/getAllAsync`;
 
@@ -24,13 +24,10 @@ export class UserService {
         ...(queryParameters.searchValue
           ? { searchValue: queryParameters.searchValue }
           : {}),
-        roleIds: roleIds
       }
     });
 
-    return this.http.get<ApiResponse<PaginatedResponse<User>>>(url, {
-      params
-    });
+    return this.http.get<ApiResponse<PaginatedResponse<User>>>(url, { params });
   }
 
   getProductById(id: string): Observable<ApiResponse<Product>> {
@@ -47,5 +44,31 @@ export class UserService {
     const url = `${this.defaultUrl}/deleteAsync/${id}`;
     return this.http.delete<ApiResponse<void>>(url);
   }
+
+
+
+  // ================Role==================
+  getAllRoleAsync(queryParameters: QueryParameters)
+    : Observable<ApiResponse<PaginatedResponse<Role>>> {
+    const url = `${this.defaultUrl}/getAllRoleAsync`;
+
+    const params = new HttpParams({
+      fromObject: {
+        pageNumber: queryParameters.pageNumber.toString(),
+        pageSize: queryParameters.pageSize.toString(),
+        ...(queryParameters.searchValue
+          ? { searchValue: queryParameters.searchValue }
+          : {}),
+      }
+    });
+
+    return this.http.get<ApiResponse<PaginatedResponse<Role>>>(url, { params });
+  }
+
+  getAllRoleMenu(): Observable<ApiResponse<RoleMenu[]>> {
+    const url = `${this.defaultUrl}/getAllRoleMenu`;
+    return this.http.get<ApiResponse<RoleMenu[]>>(url);
+  }
+
 }
 

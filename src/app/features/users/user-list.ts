@@ -61,9 +61,7 @@ export class UserList extends BaseListService implements OnInit {
   public totalUsers = 0;
   public pageSize = 5;
   public pageIndex = 0;
-  searchText = '';
-  selectedRoles: string[] = [];
-  selectedStatus = '';
+  public searchText = '';
   public visibleUsers = signal<User[]>([]);
   public roles = signal<Role[]>([]);
 
@@ -85,7 +83,7 @@ export class UserList extends BaseListService implements OnInit {
     super.startLoading();
 
     this.userService
-      .getAllAsync(queryParameters, this.selectedRoles)
+      .getAllAsync(queryParameters)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.stopLoading())
@@ -104,7 +102,7 @@ export class UserList extends BaseListService implements OnInit {
         error: (error) => {
           this.dataSource.data = [];
           this.totalUsers = 0;
-          console.error('Error fetching products:', error);
+          console.error('Error fetching users:', error);
         },
       });
   }
@@ -180,7 +178,6 @@ export class UserList extends BaseListService implements OnInit {
 
     this.visibleUsers.set(users);
   }
-
 
   getSortIcon(sortId: string): string {
 
