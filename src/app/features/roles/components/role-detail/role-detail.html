@@ -23,15 +23,11 @@
         </button>
     </div>
 
-    <div class="min-h-0 flex-1 overflow-y-auto
-               px-3 py-3
-               sm:px-4 sm:py-4">
+    <div class="min-h-0 flex-1 overflow-y-auto px-3 py-3 sm:px-4 sm:py-4">
 
         <section>
 
-            <div class="mb-3 border-b
-                       border-[var(--mat-sys-outline-variant)]
-                       pb-2.5">
+            <div class="mb-3 border-b border-[var(--mat-sys-outline-variant)] pb-2.5">
 
                 <h3 class="text-sm font-semibold">Role Information</h3>
 
@@ -41,15 +37,12 @@
 
             </div>
 
-            <div class="grid grid-cols-1
-                       gap-x-3 gap-y-3
-                       sm:grid-cols-2 sm:gap-x-4">
+            <div class="grid grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2 sm:gap-x-4">
 
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label> Role Name </mat-label>
                     <input matInput type="text" maxlength="100" placeholder="Administrator" />
                 </mat-form-field>
-
 
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label> Status</mat-label>
@@ -90,12 +83,9 @@
 
         </section>
 
-
         <section class="mt-2 sm:mt-3">
 
-            <div class="mb-2.5 border-b
-                       border-[var(--mat-sys-outline-variant)]
-                       pb-2.5">
+            <div class="mb-2.5 border-b border-[var(--mat-sys-outline-variant)] pb-2.5">
 
                 <h3 class="text-sm font-semibold">
                     Permissions
@@ -107,29 +97,17 @@
 
             </div>
 
-
             <div class="space-y-1.5">
-
                 @for (menu of roleMenu(); track menu.menuId) {
-
-                <div class="rounded-lg border
-                   border-[var(--mat-sys-outline-variant)]
-                   bg-[var(--mat-sys-surface)]
-                   px-2.5 py-2
-                   transition-colors
-                   hover:bg-[var(--mat-sys-surface-container)]
-                   sm:px-3 sm:py-2.5">
+                <div class="rounded-lg border border-[var(--mat-sys-outline-variant)] bg-[var(--mat-sys-surface)]
+                   px-2.5 py-2 transition-colors hover:bg-[var(--mat-sys-surface-container)] sm:px-3 sm:py-2.5">
 
                     <!-- Menu -->
                     <div class="flex items-center justify-between gap-2">
-
                         <div class="flex min-w-0 items-center gap-1.5">
-
                             <mat-checkbox color="primary" class="shrink-0">
                             </mat-checkbox>
-
                             <div class="min-w-0">
-
                                 <div class="truncate text-xs font-semibold sm:text-sm">
                                     {{ menu.menuName }}
                                 </div>
@@ -137,21 +115,13 @@
                                 <div class="truncate text-[10px] leading-3.5 opacity-50 sm:text-[11px]">
                                     {{ menu.description }}
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
 
-
                     <!-- Permissions -->
-                    <div class="mt-1.5 grid grid-cols-2
-                       gap-x-1 gap-y-0
-                       border-t
-                       border-[var(--mat-sys-outline-variant)]
-                       pt-1
-                       sm:grid-cols-4">
+                    <div class="mt-1.5 grid grid-cols-2 gap-x-1 gap-y-0
+                       border-t border-[var(--mat-sys-outline-variant)] pt-1 sm:grid-cols-4">
 
                         @for (permission of menu.permissions; track permission.permissionId) {
 
@@ -174,11 +144,8 @@
                     </div>
 
                 </div>
-
                 }
-
             </div>
-
 
         </section>
 
