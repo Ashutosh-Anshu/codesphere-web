@@ -37,7 +37,7 @@ export interface RoleDetailModel extends Role {
 
 export interface RolePermission {
   menuId: string;
-  actionId: string;
+  permissionId: string;
   isAllowed: boolean;
 }
 

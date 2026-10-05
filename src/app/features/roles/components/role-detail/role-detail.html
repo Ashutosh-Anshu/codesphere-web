@@ -1,4 +1,4 @@
-<div class="flex h-full min-h-0 flex-col
+<form [formGroup]="roleForm" (ngSubmit)="saveRole()" class="flex h-full min-h-0 flex-col
            bg-[var(--mat-sys-surface)]
            text-[var(--mat-sys-on-surface)]">
 
@@ -18,7 +18,7 @@
             </p>
         </div>
 
-        <button mat-icon-button type="button" aria-label="Close" (click)="onCancel()" class="shrink-0">
+        <button mat-icon-button type="button" aria-label="Close" (click)="close()" class="shrink-0">
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -41,13 +41,17 @@
 
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label> Role Name </mat-label>
-                    <input matInput type="text" maxlength="100" placeholder="Administrator" />
+                    <input matInput type="text" maxlength="100" formControlName="name" />
+                    @if(roleForm.get('name')?.touched && roleForm.get('name')?.hasError('required')){
+                    <mat-error>Role name is required</mat-error>
+                    }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="w-full">
                     <mat-label> Status</mat-label>
-                    <mat-select>
-                        <mat-option value="ACTIVE">
+                    <mat-select formControlName="isActive">
+
+                        <mat-option [value]="true">
                             <div class="flex items-center gap-2 text-sm">
                                 <span class="h-2 w-2 rounded-full bg-green-500">
                                 </span>
@@ -55,13 +59,14 @@
                             </div>
                         </mat-option>
 
-                        <mat-option value="INACTIVE">
+                        <mat-option [value]="false">
                             <div class="flex items-center gap-2 text-sm">
                                 <span class="h-2 w-2 rounded-full bg-gray-400">
                                 </span>
                                 Inactive
                             </div>
                         </mat-option>
+
                     </mat-select>
 
                 </mat-form-field>
@@ -70,11 +75,12 @@
 
                     <mat-label> Description</mat-label>
 
-                    <textarea matInput rows="2" maxlength="500" placeholder="Full system administrator">
+                    <textarea matInput rows="2" maxlength="500" placeholder="Full system administrator"
+                        formControlName="description">
                     </textarea>
 
                     <mat-hint align="end">
-                        {{ 8 }}/500
+                        {{ roleForm.controls.description.value.length }}/500
                     </mat-hint>
 
                 </mat-form-field>
@@ -98,16 +104,22 @@
             </div>
 
             <div class="space-y-1.5">
+
                 @for (menu of roleMenu(); track menu.menuId) {
+
                 <div class="rounded-lg border border-[var(--mat-sys-outline-variant)] bg-[var(--mat-sys-surface)]
                    px-2.5 py-2 transition-colors hover:bg-[var(--mat-sys-surface-container)] sm:px-3 sm:py-2.5">
 
-                    <!-- Menu -->
                     <div class="flex items-center justify-between gap-2">
+
                         <div class="flex min-w-0 items-center gap-1.5">
-                            <mat-checkbox color="primary" class="shrink-0">
+
+                            <mat-checkbox color="primary" class="shrink-0" [checked]="isMenuSelected(menu.menuId)"
+                                (change)="onMenuChange(menu.menuId, $event.checked)">
                             </mat-checkbox>
+
                             <div class="min-w-0">
+
                                 <div class="truncate text-xs font-semibold sm:text-sm">
                                     {{ menu.menuName }}
                                 </div>
@@ -115,22 +127,24 @@
                                 <div class="truncate text-[10px] leading-3.5 opacity-50 sm:text-[11px]">
                                     {{ menu.description }}
                                 </div>
+
                             </div>
+
                         </div>
+
                     </div>
 
-                    <!-- Permissions -->
                     <div class="mt-1.5 grid grid-cols-2 gap-x-1 gap-y-0
                        border-t border-[var(--mat-sys-outline-variant)] pt-1 sm:grid-cols-4">
 
                         @for (permission of menu.permissions; track permission.permissionId) {
 
-                        <label class="flex min-w-0 cursor-pointer
-                                  items-center gap-0.5
-                                  rounded-md px-0.5 py-0
+                        <label class="flex min-w-0 cursor-pointer items-center gap-0.5 rounded-md px-0.5 py-0
                                   hover:bg-[var(--mat-sys-surface-container)]">
 
-                            <mat-checkbox color="primary" class="compact-checkbox">
+                            <mat-checkbox color="primary" class="compact-checkbox"
+                                [formControl]="getPermissionControl(menu.menuId, permission.permissionId)"
+                                (change)="onPermissionChange(menu.menuId)">
                             </mat-checkbox>
 
                             <span class="truncate text-[11px] font-medium sm:text-xs">
@@ -144,28 +158,33 @@
                     </div>
 
                 </div>
+
                 }
+
             </div>
 
         </section>
 
     </div>
 
-
     <div class="flex shrink-0 items-center justify-end gap-1.5
-               border-t
-               border-[var(--mat-sys-outline-variant)]
+               border-t border-[var(--mat-sys-outline-variant)]
                bg-[var(--mat-sys-surface-container-low)]
-               px-3 py-2
-               sm:px-4 sm:py-2.5">
+               px-3 py-2 sm:px-4 sm:py-2.5">
+
         <div class="flex items-center justify-end gap-2 py-2">
-            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="button">
+
+            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="button"
+                (click)="close()">
                 Cancel
             </button>
+
             <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="submit">
                 Save
             </button>
+
         </div>
+
     </div>
 
-</div>
+</form>
