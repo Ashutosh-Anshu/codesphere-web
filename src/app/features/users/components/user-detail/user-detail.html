@@ -1,14 +1,15 @@
 <div class="flex w-full max-w-[calc(100vw-1.5rem)] flex-col
-           overflow-hidden
-           bg-[var(--mat-sys-surface)]
-           text-[var(--mat-sys-on-surface)]
-           sm:max-w-xl">
+         overflow-hidden
+         bg-[var(--mat-sys-surface)]
+         text-[var(--mat-sys-on-surface)]
+         sm:max-w-xl">
 
+    <!-- Header -->
     <div class="flex shrink-0 items-center justify-between gap-3
-               border-b border-[var(--mat-sys-outline-variant)]
-               bg-[var(--mat-sys-surface-container-low)]
-               px-3 py-2.5
-               sm:px-4 sm:py-3">
+           border-b border-[var(--mat-sys-outline-variant)]
+           bg-[var(--mat-sys-surface-container-low)]
+           px-3 py-2.5
+           sm:px-4 sm:py-3">
 
         <div class="min-w-0">
 
@@ -23,152 +24,201 @@
         </div>
 
         <button mat-icon-button type="button" aria-label="Close" (click)="close()" class="shrink-0">
-
-            <mat-icon>
-                close
-            </mat-icon>
-
+            <mat-icon>close</mat-icon>
         </button>
 
     </div>
 
+    <!-- Form -->
+    <form [formGroup]="userForm" (ngSubmit)="saveUser()" class="flex min-h-0 flex-1 flex-col">
 
-    <form class="min-h-0 overflow-y-auto
-               px-3 py-3
-               sm:px-4 sm:py-4">
+        <!-- Scrollable Content -->
+        <div class="min-h-0 flex-1 overflow-y-auto
+             px-3 py-3
+             sm:px-4 sm:py-4">
 
-        <div class="grid grid-cols-1
-                   gap-x-3 gap-y-1
-                   sm:grid-cols-2 sm:gap-x-4">
+            <div class="grid grid-cols-1
+               gap-x-3 gap-y-2
+               sm:grid-cols-2 sm:gap-x-4">
 
-            <mat-form-field appearance="outline" class="w-full">
+                <!-- First Name -->
+                <mat-form-field appearance="outline" class="w-full">
 
-                <mat-label>
-                    First Name
-                </mat-label>
+                    <mat-label>First Name</mat-label>
 
-                <input matInput type="text" placeholder="Enter first name" />
+                    <input matInput type="text" formControlName="firstName" placeholder="Enter first name" />
 
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full">
-
-                <mat-label>
-                    Last Name
-                </mat-label>
-
-                <input matInput type="text" placeholder="Enter last name" />
-
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full sm:col-span-2">
-
-                <mat-label>
-                    Email Address
-                </mat-label>
-
-                <input matInput type="email" placeholder="Enter email address" />
-
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full sm:col-span-2">
-
-                <mat-label>
-                    Username
-                </mat-label>
-
-                <input matInput type="text" placeholder="Enter username" />
-
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full">
-
-                <mat-label>
-                    Password
-                </mat-label>
-
-                <input matInput type="password" placeholder="Enter password" />
-
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full">
-
-                <mat-label>
-                    Confirm Password
-                </mat-label>
-
-                <input matInput type="password" placeholder="Confirm password" />
-
-            </mat-form-field>
-
-
-            <mat-form-field appearance="outline" class="w-full">
-
-                <mat-label>
-                    Role
-                </mat-label>
-
-                <mat-select>
-
-                    <mat-option value="">
-                        Select role
-                    </mat-option>
-
-                    @for (role of roles; track role.id) {
-
-                    <mat-option [value]="role.id">
-                        {{ role.name }}
-                    </mat-option>
-
+                    @if (
+                    userForm.get('firstName')?.touched &&
+                    userForm.get('firstName')?.hasError('required')
+                    ) {
+                    <mat-error>
+                        First name is required
+                    </mat-error>
                     }
 
-                </mat-select>
-
-            </mat-form-field>
+                </mat-form-field>
 
 
-            <mat-form-field appearance="outline" class="w-full">
+                <!-- Last Name -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput type="text" formControlName="lastName" placeholder="Enter last name" />
+                </mat-form-field>
 
-                <mat-label>
-                    Status
-                </mat-label>
 
-                <mat-select>
+                <!-- Email -->
+                <mat-form-field appearance="outline" class="w-full sm:col-span-2">
 
-                    <mat-option value="ACTIVE">
-                        Active
-                    </mat-option>
+                    <mat-label>Email Address</mat-label>
 
-                    <mat-option value="INACTIVE">
-                        Inactive
-                    </mat-option>
+                    <input matInput type="email" formControlName="email" placeholder="Enter email address" />
 
-                </mat-select>
+                    @if (
+                    userForm.get('email')?.touched &&
+                    userForm.get('email')?.hasError('required')
+                    ) {
+                    <mat-error>
+                        Email is required
+                    </mat-error>
+                    }
 
-            </mat-form-field>
+                    @if (
+                    userForm.get('email')?.touched &&
+                    userForm.get('email')?.hasError('email')
+                    ) {
+                    <mat-error>
+                        Please enter a valid email address
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+
+                <!-- Password -->
+                <mat-form-field appearance="outline" class="w-full">
+
+                    <mat-label>Password</mat-label>
+
+                    <input matInput type="password" formControlName="password" maxlength="6"
+                        placeholder="Enter password" />
+
+                    @if (
+                    userForm.get('password')?.touched &&
+                    userForm.get('password')?.hasError('required')
+                    ) {
+                    <mat-error>
+                        Password is required
+                    </mat-error>
+                    }
+
+                    @if (
+                    userForm.get('password')?.touched &&
+                    userForm.get('password')?.hasError('minlength')
+                    ) {
+                    <mat-error>
+                        Password must be at least 8 characters
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+
+
+                <!-- Confirm Password -->
+                <mat-form-field appearance="outline" class="w-full">
+
+                    <mat-label>Confirm Password</mat-label>
+
+                    <input matInput type="password" formControlName="confirmPassword" maxlength="6"
+                        placeholder="Confirm password" />
+
+                    @if (
+                    userForm.get('confirmPassword')?.touched &&
+                    userForm.get('confirmPassword')?.hasError('required')
+                    ) {
+                    <mat-error>
+                        Confirm password is required
+                    </mat-error>
+                    }
+
+                    @if (
+                    userForm.get('confirmPassword')?.touched &&
+                    !userForm.get('confirmPassword')?.hasError('required') &&
+                    userForm.hasError('passwordMismatch')
+                    ) {
+                    <mat-error>
+                        Passwords do not match
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+
+
+                <!-- Role -->
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Role</mat-label>
+                    <mat-select formControlName="roleId">
+                        <mat-option value="">Select role</mat-option>
+                        @for (role of roleItem(); track role.roleId) {
+                        <mat-option [value]="role.roleId">
+                            {{ role.name }}
+                        </mat-option>
+                        }
+
+                    </mat-select>
+
+                    @if (
+                    userForm.get('role')?.touched &&
+                    userForm.get('role')?.hasError('required')
+                    ) {
+                    <mat-error>
+                        Role is required
+                    </mat-error>
+                    }
+
+                </mat-form-field>
+
+
+                <!-- Status -->
+                <mat-form-field appearance="outline" class="w-full">
+
+                    <mat-label>Status</mat-label>
+
+                    <mat-select formControlName="isActive">
+
+                        <mat-option [value]="true">
+                            Active
+                        </mat-option>
+
+                        <mat-option [value]="false">
+                            Inactive
+                        </mat-option>
+
+                    </mat-select>
+
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+
+        <!-- Footer -->
+        <div class="flex shrink-0 items-center justify-end gap-1.5
+             border-t border-[var(--mat-sys-outline-variant)]
+             bg-[var(--mat-sys-surface-container-low)]
+             px-3 py-2
+             sm:px-4 sm:py-2.5">
+
+            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5" type="button" (click)="close()">
+                Cancel
+            </button>
+
+            <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5" type="submit">
+                Save
+            </button>
 
         </div>
 
     </form>
 
-    <div class="flex shrink-0 items-center justify-end gap-1.5
-               border-t
-               border-[var(--mat-sys-outline-variant)]
-               bg-[var(--mat-sys-surface-container-low)]
-               px-3 py-2
-               sm:px-4 sm:py-2.5">
-        <div class="flex items-center justify-end gap-2 py-2">
-            <button mat-stroked-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="button">
-                Cancel
-            </button>
-            <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5 w-full sm:w-auto" type="submit">
-                Save
-            </button>
-        </div>
-    </div>
 </div>

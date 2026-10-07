@@ -5,14 +5,33 @@ export interface User {
   fullName: string;
   email: string;
   role: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+  isActive: boolean;
   createdAt: string | Date;
-  modifiedAt: string | Date;
+  updatedAt: string | Date;
 }
 
-export interface Role {
+export interface UserDetailModel {
+  userId?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  roleId: string;
+  isActive: boolean;
+}
+
+export interface UserDetailResponse extends User {
+  roleId: string;
+}
+
+
+
+export interface RoleItem{
   roleId: string;
   name: string;
+}
+export interface Role extends RoleItem {
   description: string;
   isActive: boolean;
   isSystem: boolean;

@@ -11,13 +11,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
 import { BaseListService, DialogService } from '../../core/services';
 import { ViewMode } from '../../core/enums';
 import { UserDetail } from './components/user-detail/user-detail';
 import { Role, User } from '../../core/models';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { QueryParameters, AvatarInitialsPipe } from '../../common';
+import { QueryParameters, AvatarInitialsPipe, AvatarColorPipe } from '../../common';
 import { UserService } from '../../core/services/user-service';
 import { filter, finalize, switchMap } from 'rxjs';
 
@@ -28,16 +27,13 @@ import { filter, finalize, switchMap } from 'rxjs';
     MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
     MatTableModule, MatSortModule, MatPaginatorModule, MatMenuModule,
     DatePipe, FormsModule, MatDividerModule, MatSelectModule,
-    AvatarInitialsPipe
+    AvatarInitialsPipe, AvatarColorPipe
   ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css',
 })
 export class UserList extends BaseListService implements OnInit {
 
-
-
-  // ======================================
   private readonly dialogService = inject(DialogService);
   private readonly destroyRef = inject(DestroyRef);
   public readonly dataSource = new MatTableDataSource<User>([]);
@@ -48,7 +44,7 @@ export class UserList extends BaseListService implements OnInit {
   });
 
   public readonly displayedColumns: string[] = [
-    'user', 'email', 'role', 'status', 'modifiedAt', 'actions'
+    'user', 'email', 'role', 'status', 'updatedAt', 'actions'
   ];
 
   public readonly mobileSortOptions = [
@@ -83,7 +79,7 @@ export class UserList extends BaseListService implements OnInit {
     super.startLoading();
 
     this.userService
-      .getAllAsync(queryParameters)
+      .getAllUserAsync(queryParameters)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.stopLoading())
@@ -162,16 +158,16 @@ export class UserList extends BaseListService implements OnInit {
       case 'recent':
         users.sort(
           (a, b) =>
-            new Date(b.modifiedAt).getTime() -
-            new Date(a.modifiedAt).getTime()
+            new Date(b.updatedAt).getTime() -
+            new Date(a.updatedAt).getTime()
         );
         break;
 
       case 'oldest':
         users.sort(
           (a, b) =>
-            new Date(a.modifiedAt).getTime() -
-            new Date(b.modifiedAt).getTime()
+            new Date(a.updatedAt).getTime() -
+            new Date(b.updatedAt).getTime()
         );
         break;
     }

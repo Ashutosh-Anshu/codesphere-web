@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, PaginatedResponse, QueryParameters } from '../../common/services/ApiResponse';
-import { Product, Role, RoleDetailModel, RoleMenu, RolePermission, User } from '../models';
+import { Product, Role, RoleDetailModel, RoleItem, RoleMenu, RolePermission, User, UserDetailModel } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -13,9 +13,9 @@ export class UserService {
   private defaultUrl = environment.apiUrl + '/account';
   private http = inject(HttpClient);
 
-  getAllAsync(queryParameters: QueryParameters)
+  getAllUserAsync(queryParameters: QueryParameters)
     : Observable<ApiResponse<PaginatedResponse<User>>> {
-    const url = `${this.defaultUrl}/getAllAsync`;
+    const url = `${this.defaultUrl}/getAllUserAsync`;
 
     const params = new HttpParams({
       fromObject: {
@@ -30,12 +30,31 @@ export class UserService {
     return this.http.get<ApiResponse<PaginatedResponse<User>>>(url, { params });
   }
 
+  getAllUserRoles(): Observable<RoleItem[]> {
+    const url = `${this.defaultUrl}/getAllUserRoles`;
+    return this.http.get<RoleItem[]>(url);
+  }
+
   deleteUser(id: string): Observable<ApiResponse<void>> {
     const url = `${this.defaultUrl}/deleteAsync/${id}`;
     return this.http.delete<ApiResponse<void>>(url);
   }
 
+  getUserById(userId: string): Observable<ApiResponse<UserDetailModel>> {
+    const url = `${this.defaultUrl}/getUserById/${userId}`;
+    return this.http.get<ApiResponse<UserDetailModel>>(url);
+  }
 
+  createOrUpdateUserAsync(
+    userDetailModel: UserDetailModel
+  ): Observable<ApiResponse<UserDetailModel>> {
+    const url = `${this.defaultUrl}/createOrUpdateUserAsync`;
+
+    return this.http.post<ApiResponse<UserDetailModel>>(
+      url,
+      userDetailModel
+    );
+  }
 
   // ================Role==================
 
