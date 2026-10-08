@@ -1,68 +1,89 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSortModule } from '@angular/material/sort';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatSelectModule } from '@angular/material/select';
-import { BaseListService, DialogService } from '../../core/services';
-import { ViewMode } from '../../core/enums';
-import { UserDetail } from './components/user-detail/user-detail';
-import { Role, User } from '../../core/models';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { QueryParameters, AvatarInitialsPipe, AvatarColorPipe } from '../../common';
-import { UserService } from '../../core/services/user-service';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { filter, finalize, switchMap } from 'rxjs';
-
+import { BaseListService, DialogService, UserService } from '../../core/services';
+import { User } from '../../core/models';
+import { ViewMode } from '../../core/enums';
+import { QueryParameters, AvatarColorPipe, AvatarInitialsPipe } from '../../common';
+import { UserDetail } from './components/user-detail/user-detail';
 
 @Component({
   selector: 'app-user-list',
   imports: [
     MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule,
     MatTableModule, MatSortModule, MatPaginatorModule, MatMenuModule,
-    DatePipe, FormsModule, MatDividerModule, MatSelectModule,
-    AvatarInitialsPipe, AvatarColorPipe
+    DatePipe, FormsModule,
+    AvatarColorPipe,
+    AvatarInitialsPipe
   ],
   templateUrl: './user-list.html',
   styleUrl: './user-list.css',
 })
-export class UserList extends BaseListService implements OnInit {
+export class UserList extends BaseListService implements OnInit, AfterViewInit {
 
-  private readonly dialogService = inject(DialogService);
   private readonly destroyRef = inject(DestroyRef);
-  public readonly dataSource = new MatTableDataSource<User>([]);
   private readonly userService = inject(UserService);
-  private readonly fb = inject(FormBuilder);
-  public readonly visibleProducts = toSignal(this.dataSource.connect(), {
+  private readonly dialogService = inject(DialogService);
+
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  public readonly dataSource = new MatTableDataSource<User>([]);
+
+  public readonly visibleUsers = toSignal(this.dataSource.connect(), {
     initialValue: [] as User[],
   });
 
   public readonly displayedColumns: string[] = [
-    'user', 'email', 'role', 'status', 'updatedAt', 'actions'
+    'fullName', 'email', 'role', 'status', 'updatedAt', 'actions'
   ];
 
   public readonly mobileSortOptions = [
-    { id: 'nameAsc', label: 'Name A-Z' },
-    { id: 'nameDesc', label: 'Name Z-A' },
-    { id: 'recent', label: 'Recently Modified' },
-    { id: 'oldest', label: 'Oldest Modified' },
+    { id: 'fullName', label: 'Full Name' },
+    { id: 'email', label: 'Email' },
+    { id: 'role', label: 'Role' },
+    { id: 'status', label: 'Status' },
+    { id: 'updatedAt', label: 'Modified At' },
   ];
 
+  public searchText = '';
   public totalUsers = 0;
   public pageSize = 5;
   public pageIndex = 0;
-  public searchText = '';
-  public visibleUsers = signal<User[]>([]);
-  public roles = signal<Role[]>([]);
 
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+
+    this.dataSource.sortingDataAccessor = (item: User, column: string) => {
+      switch (column) {
+        case 'fullName':
+          return item.fullName?.toLowerCase() ?? '';
+        case 'email':
+          return item.email?.toLowerCase() ?? '';
+        case 'role':
+          return item.roleName?.toLowerCase() ?? '';
+        case 'status':
+          return item.isActive ? 'active' : 'inactive';
+        case 'updatedAt':
+          return item.updatedAt ? new Date(item.updatedAt).getTime() : 0;
+        default:
+          return item[column as keyof User] as string | number;
+      }
+    };
   }
 
   loadUsers(resetPage = false): void {
@@ -79,7 +100,7 @@ export class UserList extends BaseListService implements OnInit {
     super.startLoading();
 
     this.userService
-      .getAllUserAsync(queryParameters)
+      .getAllUsersAsync(queryParameters)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.stopLoading())
@@ -92,7 +113,7 @@ export class UserList extends BaseListService implements OnInit {
           } else {
             this.dataSource.data = [];
             this.totalUsers = 0;
-            console.error('Error fetching products:', response.message);
+            console.error('Error fetching users:', response.message);
           }
         },
         error: (error) => {
@@ -104,7 +125,14 @@ export class UserList extends BaseListService implements OnInit {
   }
 
   onSearch(): void {
+    this.searchText = this.searchText.trim();
     this.pageIndex = 0;
+    this.loadUsers();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
     this.loadUsers();
   }
 
@@ -131,87 +159,27 @@ export class UserList extends BaseListService implements OnInit {
             this.loadUsers();
           }
         },
-        error: (error) => console.error('Error deleting product:', error),
+        error: (error) => console.error('Error deleting user:', error),
       });
   }
 
-  applyMobileSort(sortId: string): void {
-
-    const users = [...this.visibleUsers()];
-
-    switch (sortId) {
-
-      case 'nameAsc':
-        users.sort((a, b) =>
-          `${a.firstName} ${a.lastName}`
-            .localeCompare(`${b.firstName} ${b.lastName}`)
-        );
-        break;
-
-      case 'nameDesc':
-        users.sort((a, b) =>
-          `${b.firstName} ${b.lastName}`
-            .localeCompare(`${a.firstName} ${a.lastName}`)
-        );
-        break;
-
-      case 'recent':
-        users.sort(
-          (a, b) =>
-            new Date(b.updatedAt).getTime() -
-            new Date(a.updatedAt).getTime()
-        );
-        break;
-
-      case 'oldest':
-        users.sort(
-          (a, b) =>
-            new Date(a.updatedAt).getTime() -
-            new Date(b.updatedAt).getTime()
-        );
-        break;
-    }
-
-    this.visibleUsers.set(users);
+  applyMobileSort(column: string): void {
+    this.sort.sort({ id: column, start: 'asc', disableClear: true });
   }
 
-  getSortIcon(sortId: string): string {
-
-    switch (sortId) {
-      case 'nameAsc':
-        return 'arrow_upward';
-
-      case 'nameDesc':
-        return 'arrow_downward';
-
-      case 'recent':
-        return 'schedule';
-
-      case 'oldest':
-        return 'history';
-
-      default:
-        return 'sort';
-    }
+  getSortIcon(column: string): string {
+    if (this.sort?.active !== column) return '';
+    return this.sort.direction === 'asc' ? 'arrow_upward' : 'arrow_downward';
   }
 
   private openUserDialog(mode: ViewMode, userId?: string): void {
     this.dialogService
-      .open(UserDetail,
-        { mode, userId },
-        { width: '580px' }
-      )
+      .open(UserDetail, { mode, userId }, { width: '580px' })
       .afterClosed()
       .subscribe((result) => {
         if (result) {
           this.loadUsers();
         }
       });
-  }
-
-  onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadUsers();
   }
 }

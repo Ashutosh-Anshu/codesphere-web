@@ -13,9 +13,9 @@ export class UserService {
   private defaultUrl = environment.apiUrl + '/account';
   private http = inject(HttpClient);
 
-  getAllUserAsync(queryParameters: QueryParameters)
+  getAllUsersAsync(queryParameters: QueryParameters)
     : Observable<ApiResponse<PaginatedResponse<User>>> {
-    const url = `${this.defaultUrl}/getAllUserAsync`;
+    const url = `${this.defaultUrl}/getAllUsersAsync`;
 
     const params = new HttpParams({
       fromObject: {
@@ -36,7 +36,7 @@ export class UserService {
   }
 
   deleteUser(id: string): Observable<ApiResponse<void>> {
-    const url = `${this.defaultUrl}/deleteAsync/${id}`;
+    const url = `${this.defaultUrl}/deleteUserById/${id}`;
     return this.http.delete<ApiResponse<void>>(url);
   }
 

@@ -99,7 +99,7 @@
 
                     <mat-label>Password</mat-label>
 
-                    <input matInput type="password" formControlName="password" maxlength="6"
+                    <input matInput type="password" formControlName="password" pattern="[0-9]*" inputmode="numeric"  maxlength="4"
                         placeholder="Enter password" />
 
                     @if (
@@ -116,7 +116,7 @@
                     userForm.get('password')?.hasError('minlength')
                     ) {
                     <mat-error>
-                        Password must be at least 8 characters
+                        PIN must be exactly 4 digits
                     </mat-error>
                     }
 
@@ -128,7 +128,7 @@
 
                     <mat-label>Confirm Password</mat-label>
 
-                    <input matInput type="password" formControlName="confirmPassword" maxlength="6"
+                    <input matInput type="password" formControlName="confirmPassword" pattern="[0-9]*" inputmode="numeric"  maxlength="4"
                         placeholder="Confirm password" />
 
                     @if (

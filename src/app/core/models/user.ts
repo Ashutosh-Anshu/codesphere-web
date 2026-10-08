@@ -4,7 +4,7 @@ export interface User {
   lastName: string;
   fullName: string;
   email: string;
-  role: string;
+  roleName: string;
   isActive: boolean;
   createdAt: string | Date;
   updatedAt: string | Date;

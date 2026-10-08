@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RoleItem, UserDetailModel } from '../../../../core/models';
 import { ViewMode } from '../../../../core/enums';
 import _ from 'lodash';
+import { filter, finalize } from 'rxjs';
 
 interface UserDetailData {
   mode: ViewMode;
@@ -65,11 +66,12 @@ export class UserDetail extends BaseDetailService {
 
   userForm = this.fb.nonNullable.group(
     {
+      userId: [''],
       firstName: ['', Validators.required],
       lastName: [''],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: ['',Validators.required],
+      password: [''],
+      confirmPassword: [''],
       roleId: ['', Validators.required],
       isActive: [true],
     },
@@ -97,11 +99,27 @@ export class UserDetail extends BaseDetailService {
 
               case ViewMode.Add:
                 this.isAddMode = true;
+                this.userForm.get('password')?.setValidators([
+                  Validators.required,
+                  Validators.minLength(4)
+                ]);
+
+                this.userForm.get('confirmPassword')?.setValidators([
+                  Validators.required
+                ]);
+                this.userForm.get('userId')?.clearValidators();
+                this.userForm.get('password')?.updateValueAndValidity();
+                this.userForm.get('confirmPassword')?.updateValueAndValidity();
                 this.cloneDeep();
                 break;
 
               case ViewMode.Edit:
                 this.isEditMode = true;
+                this.userForm.get('password')?.clearValidators();
+                this.userForm.get('confirmPassword')?.clearValidators();
+
+                this.userForm.get('password')?.updateValueAndValidity();
+                this.userForm.get('confirmPassword')?.updateValueAndValidity();
                 this.getUserById(this.dialogData.userId ?? '');
                 break;
 
@@ -131,11 +149,14 @@ export class UserDetail extends BaseDetailService {
           if (response.success && response.data) {
             const user = response.data as UserDetailModel;
             this.userForm.patchValue({
-              // userId: user.userId,
-              // fir: user.name,
-              // description: user.description,
-              // isActive: user.isActive,
-              // isSystem: user.isSystem
+              userId: user.userId?.toString() ?? '',
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              roleId: user.roleId,
+              isActive: user.isActive,
+              password: user.password ?? '',
+              confirmPassword: user.password ?? ''
             });
             this.cloneDeep();
           } else {
@@ -168,7 +189,20 @@ export class UserDetail extends BaseDetailService {
     );
   }
 
+  private trimFormValues(): void {
+    const values = this.userForm.getRawValue();
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key as keyof typeof values];
+
+      if (typeof value === 'string') {
+        this.userForm.get(key)?.setValue(value.trim());
+      }
+    });
+  }
+
   saveUser(): void {
+    this.trimFormValues();
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
@@ -180,6 +214,7 @@ export class UserDetail extends BaseDetailService {
     }
 
     const payload: UserDetailModel = this.userForm.getRawValue();
+    payload.userId = this.isAddMode ? '00000000-0000-0000-0000-000000000000' : payload.userId;
     super.startLoading();
 
     this.userService.createOrUpdateUserAsync(payload)
