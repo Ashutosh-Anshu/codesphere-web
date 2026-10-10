@@ -1,33 +1,41 @@
 <div class="w-full overflow-x-hidden">
     <main class="relative mx-auto flex w-full max-w-7xl flex-col">
         <section class="flex flex-1 items-center justify-center">
-            <div class="w-full max-w-[450px] overflow-hidden rounded-3xl bg-[var(--mat-sys-surface)]">
+            <div class="w-full max-w-[420px] overflow-hidden rounded-2xl bg-[var(--mat-sys-surface)]">
+
                 <div
-                    class="relative overflow-hidden border-b border-[var(--mat-sys-outline-variant)] px-5 pb-6 pt-7 sm:px-8 sm:pb-7 sm:pt-8">
+                    class="relative overflow-hidden border-b border-[var(--mat-sys-outline-variant)] px-5 pb-5 pt-5 sm:px-6 sm:pb-5 sm:pt-6">
                     <div
-                        class="pointer-events-none absolute -right-20 -top-24 h-52 w-52 rounded-full bg-purple-600/10 blur-3xl">
+                        class="pointer-events-none absolute -right-16 -top-20 h-40 w-40 rounded-full bg-purple-600/10 blur-3xl">
                     </div>
 
-                    <div class="relative flex items-center gap-4">
-                        <div
-                            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white shadow-lg shadow-purple-600/25">
-                            <mat-icon class="!text-[28px]">lock</mat-icon>
-                        </div>
+                    <div class="flex justify-between gap-3 sm:gap-4">
+                        <div class="relative flex items-center gap-3">
+                            <div
+                                class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-fuchsia-600 text-white shadow-md shadow-purple-600/20">
+                                <mat-icon class="!m-0 !flex !h-6 !w-6 !items-center !justify-center !text-[22px]">
+                                    lock
+                                </mat-icon>
+                            </div>
 
-                        <div class="min-w-0">
-                            <h1 class="text-2xl font-bold tracking-tight text-[var(--mat-sys-on-surface)] sm:text-3xl">
-                                Welcome back
-                            </h1>
+                            <div class="min-w-0">
+                                <h1
+                                    class="text-xl font-semibold leading-tight tracking-tight text-[var(--mat-sys-on-surface)] sm:text-2xl">
+                                    Welcome back
+                                </h1>
 
-                            <p class="mt-1 text-sm leading-5 text-[var(--mat-sys-on-surface-variant)]">
-                                Sign in to continue to your account
-                            </p>
+                                <p class="mt-1 text-sm leading-5 text-[var(--mat-sys-on-surface-variant)]">
+                                    Sign in to continue to your account
+                                </p>
+                            </div>
                         </div>
+                        <button mat-icon-button aria-label="Close" (click)="close()">
+                            <mat-icon>close</mat-icon>
+                        </button>
                     </div>
                 </div>
 
-                <form [formGroup]="loginForm" (ngSubmit)="login()"
-                    class="flex flex-col gap-1 px-5 py-6 sm:px-8 sm:py-8">
+                <form [formGroup]="loginForm" class="flex flex-col gap-1.5 px-5 py-5 sm:px-6 sm:py-6">
 
                     <mat-form-field appearance="outline" class="w-full">
                         <mat-label>Email address</mat-label>
@@ -52,58 +60,53 @@
                         }
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="mt-2 w-full">
+                    <mat-form-field appearance="outline" class="w-full">
+
                         <mat-label>Password</mat-label>
 
-                        <mat-icon matPrefix>lock_outline</mat-icon>
+                        <input matInput type="password" formControlName="password" pattern="[0-9]*" inputmode="numeric"
+                            maxlength="4" placeholder="Enter password" />
 
-                        <input matInput [type]="hide() ? 'password' : 'text'" formControlName="password"
-                            autocomplete="current-password" placeholder="Enter your password" />
-
-                        <mat-icon matSuffix (click)="togglePassword($event)"
+                        <button mat-icon-button matSuffix type="button" (click)="togglePassword($event)"
                             [attr.aria-label]="hide() ? 'Show password' : 'Hide password'">
-                            {{ hide() ? 'visibility_off' : 'visibility' }}
-                        </mat-icon>
-
-                        @if (
-                        loginForm.controls.password.touched &&
-                        loginForm.controls.password.hasError('required')
-                        ) {
-                        <mat-error>Password is required</mat-error>
+                            <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                        @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+                        <mat-error> Password is required</mat-error>
                         }
+
+                        @if (loginForm.get('password')?.touched && loginForm.get('password')?.hasError('minlength')) {
+                        <mat-error>PIN must be exactly 4 digits</mat-error>
+                        }
+
                     </mat-form-field>
 
-                    <div class="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+
+                    <div class="mt-1 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <mat-checkbox color="primary" formControlName="rememberMe">
                             <span class="text-sm">Remember me</span>
                         </mat-checkbox>
 
-                        <div class="flex items-center gap-1">
-                            <a class="text-sm">
+                        <div class="flex items-center">
+                            <a class="cursor-pointer text-sm font-medium text-[var(--mat-sys-primary)] hover:underline">
                                 Forgot password?
                             </a>
                         </div>
                     </div>
 
-                    <button mat-flat-button color="primary" type="submit" [disabled]="isLoading()"
-                        class="!h-10 !rounded-lg !px-5">
-
-                        @if (isLoading()) {
-                        <mat-spinner diameter="20" class="mr-2"></mat-spinner>
-                        } @else {
-                        <mat-icon class="mr-1">login</mat-icon>
-                        }
-
-                        {{ isLoading() ? 'Signing in...' : 'Login' }}
+                    <button mat-flat-button color="primary" class="!h-9 !rounded-sm !px-5 w-full ml-2 sm:w-auto"
+                        type="submit" (click)="login()">
+                        <mat-icon aria-hidden="true">login</mat-icon>Login
                     </button>
 
+
                     <div
-                        class="mt-5 flex items-center justify-center gap-2 text-center text-xs text-[var(--mat-sys-on-surface-variant)]">
-                        <mat-icon class="!h-4 !w-4 !text-[16px]">
+                        class="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-[var(--mat-sys-on-surface-variant)]">
+                        <mat-icon class="!flex !h-4 !w-4 !items-center !justify-center !text-[15px]">
                             verified_user
                         </mat-icon>
 
-                        <span>Your connection is secure</span>
+                        <span> Your connection is secure </span>
                     </div>
                 </form>
             </div>

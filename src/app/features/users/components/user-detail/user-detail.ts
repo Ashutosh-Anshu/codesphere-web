@@ -1,8 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,11 +12,6 @@ import { RoleItem, UserDetailModel } from '../../../../core/models';
 import { ViewMode } from '../../../../core/enums';
 import _ from 'lodash';
 import { filter, finalize } from 'rxjs';
-
-interface UserDetailData {
-  mode: ViewMode;
-  userId?: string;
-}
 
 @Component({
   selector: 'app-user-detail',

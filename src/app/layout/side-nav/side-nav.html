@@ -5,7 +5,7 @@
 
     <nav class="flex-1 overflow-y-auto scrollbar-hide p-3">
 
-      <a routerLink="/crudOperations" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
+      <a routerLink="/" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
         <mat-icon class="mr-3" aria-hidden="true">dashboard</mat-icon>
         <span class="font-medium">CRUD Operations</span>
       </a>
@@ -34,23 +34,22 @@
         <div class="ml-5 mt-1 pl-3 border-l flex flex-col gap-0.5 pb-2"
           style="border-color: var(--mat-sys-outline-variant);">
 
-          <a routerLink="/users" routerLinkActive="active-link" class="nav-link"
-            (click)="closeOnMobile()">
+          <a routerLink="/users" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
             <mat-icon class="mr-3" aria-hidden="true">people</mat-icon>
             <span class="font-medium">Users</span>
           </a>
 
-          <a routerLink="/roles" routerLinkActive="active-link" class="nav-link"
-            (click)="closeOnMobile()">
+          <a routerLink="/roles" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
             <mat-icon class="mr-3" aria-hidden="true">shield</mat-icon>
             <span class="font-medium">Role</span>
           </a>
 
-          <a routerLink="/login" routerLinkActive="active-link" class="nav-link"
-            (click)="closeOnMobile()">
-            <mat-icon class="mr-3" aria-hidden="true">login</mat-icon>
-            <span class="font-medium">Login</span>
+          @for (menu of menus(); track menu.menuId) {
+          <a [routerLink]="menu.route" routerLinkActive="active-link" class="nav-link" (click)="closeOnMobile()">
+            <mat-icon class="mr-3" aria-hidden="true">{{ menu.icon }}</mat-icon>
+            <span class="font-medium">{{ menu.name }}</span>
           </a>
+          }
 
 
         </div>

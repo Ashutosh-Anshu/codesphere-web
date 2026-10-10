@@ -7,19 +7,17 @@ export const routes: Routes = [
         component: MainLayout,
         children: [
             {
-                path: 'crudOperations',
+                path: '',
                 loadComponent: () => import('./features/product-inventory/product-inventory')
                     .then((m) => m.ProductInventory),
             },
-
-            {
-                path: 'login',
-                loadComponent: () => import('./features/login/login').then(x => x.Login)
-            },
-
             {
                 path: 'users',
                 loadComponent: () => import('./features/users/user-list').then(x => x.UserList)
+            },
+            {
+                path: 'orders',
+                loadComponent: () => import('./features/employees/employee-list').then(x => x.EmployeeList)
             },
 
             {

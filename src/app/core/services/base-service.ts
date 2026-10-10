@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NgxSpinnerService } from "ngx-spinner";
 
 @Injectable({
@@ -11,7 +11,10 @@ export abstract class BaseService {
   protected isDeleteMode: boolean = false;
   private readonly spinner = inject(NgxSpinnerService);
 
-  
+  readonly isLoggedIn = signal<boolean>(
+    !!sessionStorage.getItem('accessToken')
+  );
+
   protected startLoading(): void {
     this.spinner.show();
   }

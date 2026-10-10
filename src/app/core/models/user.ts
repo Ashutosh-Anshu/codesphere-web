@@ -1,36 +1,33 @@
-export interface User {
+export interface UserBase {
   userId: string;
   firstName: string;
   lastName: string;
-  fullName: string;
   email: string;
-  roleName: string;
   isActive: boolean;
+}
+
+export interface User extends UserBase {
+  fullName: string;
+  roleName: string;
   createdAt: string | Date;
   updatedAt: string | Date;
 }
 
-export interface UserDetailModel {
-  userId?: string;
-  firstName: string;
-  lastName: string;
-  email: string;
+export interface UserDetailModel extends UserBase {
   password: string;
   confirmPassword: string;
   roleId: string;
-  isActive: boolean;
 }
 
 export interface UserDetailResponse extends User {
   roleId: string;
 }
 
-
-
-export interface RoleItem{
+export interface RoleItem {
   roleId: string;
   name: string;
 }
+
 export interface Role extends RoleItem {
   description: string;
   isActive: boolean;
@@ -50,15 +47,34 @@ export interface RoleMenu {
   permissions: RoleAction[];
 }
 
-export interface RoleDetailModel extends Role {
-  permissions: RolePermission[];
-}
-
 export interface RolePermission {
   menuId: string;
   permissionId: string;
   isAllowed: boolean;
 }
 
+export interface RoleDetailModel extends Role {
+  permissions: RolePermission[];
+}
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+}
 
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken?: string;
+  token: string;
+  expiresIn: number;
+  user: UserDetailResponse;
+}
+
+export interface Menu {
+  menuId: string;
+  name: string;
+  icon: string;
+  route: string | null;
+  parentId: string | null;
+}

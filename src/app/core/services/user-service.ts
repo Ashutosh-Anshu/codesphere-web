@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ApiResponse, PaginatedResponse, QueryParameters } from '../../common/services/ApiResponse';
-import { Product, Role, RoleDetailModel, RoleItem, RoleMenu, RolePermission, User, UserDetailModel } from '../models';
+import { LoginRequest, LoginResponse, Menu, Product, Role, RoleDetailModel, RoleItem, RoleMenu, RolePermission, User, UserDetailModel } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +12,12 @@ export class UserService {
 
   private defaultUrl = environment.apiUrl + '/account';
   private http = inject(HttpClient);
+  private refreshMenusSubject = new Subject<void>();
+  refreshMenus$ = this.refreshMenusSubject.asObservable();
+
+  refreshMenus(): void {
+    this.refreshMenusSubject.next();
+  }
 
   getAllUsersAsync(queryParameters: QueryParameters)
     : Observable<ApiResponse<PaginatedResponse<User>>> {
@@ -96,6 +102,16 @@ export class UserService {
     : Observable<ApiResponse<RoleDetailModel>> {
     const url = `${this.defaultUrl}/createOrUpdateRoleAsync`;
     return this.http.post<ApiResponse<RoleDetailModel>>(url, roleDetailModel);
+  }
+
+  login(credentials: LoginRequest): Observable<ApiResponse<LoginResponse>> {
+    const url = `${this.defaultUrl}/loginAsync`;
+    return this.http.post<ApiResponse<LoginResponse>>(url, credentials);
+  }
+
+  getMenusByUserId(userId: string): Observable<ApiResponse<Menu[]>> {
+    const url = `${this.defaultUrl}/getMenusByUserId/${userId}`;
+    return this.http.get<ApiResponse<Menu[]>>(url);
   }
 
 
